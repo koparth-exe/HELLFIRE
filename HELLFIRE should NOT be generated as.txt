@@ -1,0 +1,69 @@
+HELLFIRE should NOT be generated as one giant project or one giant code file.
+
+The game must be developed in PROFESSIONAL STAGES like a real indie/AAA game studio pipeline.
+
+Treat this as a long-term commercial game production process.
+
+The development should be divided into structured phases.
+
+Examples:
+
+* Pre-production
+* Worldbuilding
+* Technical architecture
+* Core movement prototype
+* Combat system
+* Dialogue system
+* Enemy AI
+* Boss systems
+* Lighting/shader pipeline
+* UI/UX
+* Save system
+* Audio system
+* Cutscene system
+* Vertical slice
+* Optimization
+* APK/Desktop build pipeline
+
+DO NOT attempt to generate the entire game instantly.
+
+FIRST:
+create the complete development roadmap and production structure.
+
+THEN:
+build the game step-by-step in modular systems.
+
+The project should use:
+
+* professional folder structure
+* reusable systems
+* scalable architecture
+* scene-based development
+* modular scripting
+* asset pipeline
+* production-ready organization
+
+The target is:
+a professional indie-game-quality APK/Desktop game.
+
+NOT:
+a browser prototype or giant HTML file.
+
+Preferred engine:
+Godot Engine.
+
+The project should eventually support:
+
+* Android APK
+* PC/Desktop
+* controller support
+* save files
+* scalable future expansion
+* high-quality HD-2D visuals
+
+Prioritize:
+quality,
+maintainability,
+performance,
+and scalability
+over fast generation.
