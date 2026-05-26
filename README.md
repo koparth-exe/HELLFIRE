@@ -1,3 +1,3 @@
-#Link of the game:#
-<br>
-hell-fire.netlify.app
+# 🎮 Hell Fire
+
+**Play the game here:** [hell-fire.netlify.app](https://netlify.app)
