@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>HELLFIRE: The Last Ember — © 2025 PARTH v1.0.0</title>
+
+<!-- ── FAVICON (SVG flame, inline data-URI) ── -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='fg' cx='50%25' cy='80%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23FF8800'/%3E%3Cstop offset='55%25' stop-color='%23CC2200'/%3E%3Cstop offset='100%25' stop-color='%23330000'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%230A0508'/%3E%3Cpath d='M16 3 C14 8 10 10 11 15 C12 18 10 19 10 22 C10 27 13 30 16 30 C19 30 22 27 22 22 C22 19 20 18 21 15 C22 10 18 8 16 3Z' fill='url(%23fg)'/%3E%3Cpath d='M16 14 C15 17 13 18 13 21 C13 24 14.5 26 16 26 C17.5 26 19 24 19 21 C19 18 17 17 16 14Z' fill='%23FF4400' opacity='0.7'/%3E%3Ccircle cx='16' cy='21' r='3' fill='%23FFCC00' opacity='0.6'/%3E%3C/svg%3E">
+<!-- Fallback PNG favicon for older browsers -->
+<link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230A0508'/%3E%3Cpath d='M16 3 C14 8 10 10 11 15 C12 18 10 19 10 22 C10 27 13 30 16 30 C19 30 22 27 22 22 C22 19 20 18 21 15 C22 10 18 8 16 3Z' fill='%23CC2200'/%3E%3C/svg%3E">
+
+<!-- ── META / OPEN GRAPH (WhatsApp, Discord, Twitter link previews) ── -->
+<meta name="description" content="A cursed world. A dying flame. A destiny written in ash. Play HELLFIRE: The Last Ember — a 2D cinematic action-adventure RPG.">
+<meta name="author" content="PARTH — DMCE AI-DS Engineering">
+<meta name="theme-color" content="#CC2200">
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="HELLFIRE: The Last Ember">
+<meta property="og:description" content="A cursed world. A dying flame. A destiny written in ash. 2D action-adventure RPG — play free in your browser.">
+<meta property="og:image"       content="https://hell-fire.netlify.app/og-preview.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="HELLFIRE: The Last Ember — game title screen with crimson flame">
+<meta property="og:url"         content="https://hell-fire.netlify.app/">
+<meta property="og:site_name"   content="HELLFIRE: The Last Ember">
+<!-- Twitter / X card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="HELLFIRE: The Last Ember">
+<meta name="twitter:description" content="A cursed world. A dying flame. A destiny written in ash. Free browser RPG.">
+<meta name="twitter:image"       content="https://hell-fire.netlify.app/og-preview.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#0A0508;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+canvas{display:block;image-rendering:pixelated;image-rendering:crisp-edges;}
+#hint{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);color:#442211;font-family:monospace;font-size:11px;letter-spacing:1px;pointer-events:none;z-index:99;text-align:center;}
+
+/* ── MOBILE JOYSTICK OVERLAY ── */
+#mobile-ui{display:none;position:fixed;bottom:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200;user-select:none;-webkit-user-select:none;}
+#mobile-ui.active{display:block;}
+/* Joystick base */
+#joy-zone{position:absolute;bottom:28px;left:22px;width:150px;height:150px;pointer-events:all;}
+#joy-base{position:absolute;width:130px;height:130px;top:10px;left:10px;border-radius:50%;background:rgba(60,20,10,0.55);border:2px solid rgba(204,100,40,0.5);box-shadow:0 0 18px rgba(255,80,0,0.18);}
+#joy-knob{position:absolute;width:54px;height:54px;top:38px;left:38px;border-radius:50%;background:radial-gradient(circle at 38% 36%, rgba(255,140,60,0.92), rgba(180,50,10,0.88));border:2px solid rgba(255,120,40,0.7);box-shadow:0 0 12px rgba(255,80,0,0.45);transition:none;}
+/* Action buttons right side */
+#btn-zone{position:absolute;bottom:34px;right:18px;width:230px;height:190px;pointer-events:all;}
+.mb-btn{position:absolute;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#fff;text-shadow:0 1px 3px #000;pointer-events:all;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:0 2px 12px rgba(0,0,0,0.5);transition:transform 0.06s,opacity 0.06s;}
+.mb-btn:active,.mb-btn.pressed{transform:scale(0.88);opacity:0.78;}
+#btn-jump{width:58px;height:58px;bottom:100px;right:0;background:radial-gradient(circle,rgba(60,120,200,0.88),rgba(20,50,130,0.9));border-color:rgba(80,160,255,0.6);}
+#btn-atk {width:58px;height:58px;bottom:32px;right:66px;background:radial-gradient(circle,rgba(200,40,20,0.88),rgba(130,10,0,0.9));border-color:rgba(255,80,60,0.6);}
+#btn-dash{width:48px;height:48px;bottom:120px;right:72px;background:radial-gradient(circle,rgba(60,180,120,0.82),rgba(10,100,50,0.88));border-color:rgba(80,220,140,0.55);}
+#btn-par {width:46px;height:46px;bottom:40px;right:150px;background:radial-gradient(circle,rgba(160,80,220,0.82),rgba(80,10,140,0.88));border-color:rgba(200,120,255,0.55);}
+#btn-hf  {width:46px;height:46px;bottom:122px;right:160px;background:radial-gradient(circle,rgba(255,120,0,0.85),rgba(180,50,0,0.9));border-color:rgba(255,160,40,0.6);}
+/* Top row small buttons */
+#btn-itx {position:absolute;top:16px;right:18px;width:56px;height:32px;border-radius:8px;border:1.5px solid rgba(255,200,80,0.5);background:rgba(80,40,10,0.7);font-family:'Cinzel',serif;font-size:10px;color:#FFD700;text-align:center;line-height:32px;pointer-events:all;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;letter-spacing:0.5px;}
+#btn-pause{position:absolute;top:16px;right:84px;width:56px;height:32px;border-radius:8px;border:1.5px solid rgba(150,100,60,0.4);background:rgba(40,20,10,0.7);font-family:'Cinzel',serif;font-size:10px;color:#AA7744;text-align:center;line-height:32px;pointer-events:all;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+
+/* ── LOADING SCREEN ── */
+#hf-loader{position:fixed;inset:0;background:#0A0508;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.7s ease;}
+#hf-loader.fade-out{opacity:0;pointer-events:none;}
+#hf-loader-flame{width:64px;height:64px;margin-bottom:24px;animation:flicker 1.1s ease-in-out infinite alternate;}
+@keyframes flicker{0%{transform:scaleY(1) scaleX(1);filter:drop-shadow(0 0 10px #FF4400);}50%{transform:scaleY(1.08) scaleX(0.96);filter:drop-shadow(0 0 22px #FF6600);}100%{transform:scaleY(0.94) scaleX(1.04);filter:drop-shadow(0 0 8px #CC2200);}}
+#hf-loader-title{font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:#CC2200;letter-spacing:4px;text-shadow:0 0 18px #FF4400,0 2px 4px #000;margin-bottom:6px;}
+#hf-loader-sub{font-family:'Crimson Text',serif;font-style:italic;font-size:14px;color:#664422;letter-spacing:2px;margin-bottom:28px;}
+#hf-loader-bar-wrap{width:220px;height:6px;background:#1A0808;border-radius:3px;overflow:hidden;border:1px solid #331108;}
+#hf-loader-bar{height:100%;width:0%;background:linear-gradient(90deg,#CC2200,#FF6600);border-radius:3px;transition:width 0.18s linear;}
+#hf-loader-tip{margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#442211;letter-spacing:1px;}
+
+/* ── COOKIE CONSENT BANNER ── */
+#hf-cookie{position:fixed;bottom:0;left:0;width:100%;background:rgba(8,4,8,0.97);border-top:1px solid #331108;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;z-index:8888;font-family:'Share Tech Mono',monospace;font-size:12px;color:#886644;box-shadow:0 -4px 24px rgba(0,0,0,0.6);transition:transform 0.4s ease;}
+#hf-cookie.hidden{transform:translateY(110%);}
+#hf-cookie-text{flex:1;min-width:200px;line-height:1.6;}
+#hf-cookie-text a{color:#CC6622;text-decoration:underline;cursor:pointer;}
+#hf-cookie-btns{display:flex;gap:10px;flex-shrink:0;}
+.hf-ck-btn{padding:8px 20px;border-radius:4px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid;letter-spacing:0.5px;transition:background 0.15s,color 0.15s;}
+#hf-ck-accept{background:#CC2200;border-color:#FF4400;color:#fff;}
+#hf-ck-accept:hover{background:#FF3300;}
+#hf-ck-reject{background:transparent;border-color:#442211;color:#664422;}
+#hf-ck-reject:hover{border-color:#886644;color:#AA8855;}
+</style>
+</head>
+<body>
+
+<!-- ── LOADING SCREEN ── shown immediately, hidden once Phaser BootScene completes -->
+<div id="hf-loader">
+  <svg id="hf-loader-flame" viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="lf1" cx="50%" cy="85%" r="65%">
+        <stop offset="0%"   stop-color="#FFCC00"/>
+        <stop offset="35%"  stop-color="#FF6600"/>
+        <stop offset="70%"  stop-color="#CC2200"/>
+        <stop offset="100%" stop-color="#330000"/>
+      </radialGradient>
+      <radialGradient id="lf2" cx="50%" cy="80%" r="60%">
+        <stop offset="0%"   stop-color="#FFEE88"/>
+        <stop offset="100%" stop-color="#FF4400" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- outer flame -->
+    <path d="M32 2 C28 12 18 16 20 28 C22 36 17 40 18 48 C18 60 24 72 32 74 C40 72 46 60 46 48 C47 40 42 36 44 28 C46 16 36 12 32 2Z" fill="url(#lf1)"/>
+    <!-- inner glow -->
+    <path d="M32 22 C30 30 25 33 26 40 C27 46 24 49 24 54 C24 63 28 70 32 70 C36 70 40 63 40 54 C40 49 37 46 38 40 C39 33 34 30 32 22Z" fill="url(#lf2)" opacity="0.8"/>
+    <!-- core ember -->
+    <ellipse cx="32" cy="54" rx="7" ry="5" fill="#FFDD44" opacity="0.75"/>
+  </svg>
+  <div id="hf-loader-title">HELLFIRE</div>
+  <div id="hf-loader-sub">The Last Ember</div>
+  <div id="hf-loader-bar-wrap"><div id="hf-loader-bar"></div></div>
+  <div id="hf-loader-tip">Kindling the eternal flame…</div>
+</div>
+
+<!-- ── COOKIE CONSENT BANNER ── -->
+<div id="hf-cookie" class="hidden">
+  <div id="hf-cookie-text">
+    🔥 This game uses cookies to save your progress and preferences.
+    By clicking <strong>Accept</strong> you consent to cookie storage.
+  </div>
+  <div id="hf-cookie-btns">
+    <button class="hf-ck-btn" id="hf-ck-accept">Accept</button>
+    <button class="hf-ck-btn" id="hf-ck-reject">Reject</button>
+  </div>
+</div>
+
+<div id="game"></div>
+<div id="hint">ARROWS/WASD: Move · SPACE/W/↑: Jump (×2) · LClick: Slash · LShift: Dash · RClick: Parry · MClick: Hellfire · F: Talk/Interact</div>
+
+<!-- Mobile virtual controls (auto-shown on touch devices) -->
+<div id="mobile-ui">
+  <!-- Left: Joystick -->
+  <div id="joy-zone">
+    <div id="joy-base"></div>
+    <div id="joy-knob"></div>
+  </div>
+  <!-- Right: Action buttons -->
+  <div id="btn-zone">
+    <div id="btn-jump" class="mb-btn">JUMP</div>
+    <div id="btn-atk"  class="mb-btn">ATK</div>
+    <div id="btn-dash" class="mb-btn">DASH</div>
+    <div id="btn-par"  class="mb-btn">PARRY</div>
+    <div id="btn-hf"   class="mb-btn">🔥</div>
+  </div>
+  <!-- Top-right: Interact & Pause -->
+  <div id="btn-itx">TALK (F)</div>
+  <div id="btn-pause">PAUSE</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.min.js"></script>
+<script>
+'use strict';
+/*
+  ╔══════════════════════════════════════════════════════════╗
+  ║  HELLFIRE: THE LAST EMBER                                ║
+  ║  2D HD-2D Cinematic Action-Adventure RPG                 ║
+  ║  Genre: Metroidvania × Soulslike × Precision Platformer  ║
+  ║  © 2025 PARTH · DMCE AI-DS Engineering · v1.0.0         ║
+  ╚══════════════════════════════════════════════════════════╝
+*/
+
+// ══════════════════════════════════════════════════════════
+// CONSTANTS — all magic numbers defined here
+// ══════════════════════════════════════════════════════════
+const GW = 1280, GH = 720;
+const WORLD_W = 5600, WORLD_H = 820, TILE = 40;
+
+// Colour palette — dark cinematic fantasy
+const P = {
+  SKY:0x050210,MOON:0xCC3322,STONE:0x2A1E14,STONE2:0x3A2A1C,STONE3:0x1A1208,
+  LAVA:0xFF4400,LAVA2:0xFF6600,EMBER:0xFF8800,
+  HAIR:0xD8D8E8,SKIN:0xC09070,EYE:0xFFCC88,
+  ARMOR:0x1C1C2E,CLOAK:0xBB1020,CLOAK2:0xDD1830,
+  SWORD:0x9898B0,SWORD2:0xBBBBD0,BOOT:0x2A1408,
+  RED:0xCC1122,GOLD:0xFFD700,PURPLE:0x8833CC,
+  GREEN:0x22AA44,WHITE:0xFFFFFF,
+  HP:0xCC2222,MP:0x2244CC,BONE:0xEEEECC,BOSS:0x331122,
+};
+
+// Physics — fix #2: world gravity set in config, not overridden here
+const GRAV     = 1000;  // matches physics config
+const WALK_SPD = 220;
+const JUMP_VEL = -560;
+const DJUMP_VEL= -440;
+const WJUMP_VX = 380;
+const WJUMP_VY = -520;
+const DASH_VEL = 650;
+const DASH_MS  = 170;
+
+// ══════════════════════════════════════════════════════════
+// MOBILE DETECTION & VIRTUAL INPUT STATE
+// ══════════════════════════════════════════════════════════
+const IS_MOBILE = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(navigator.userAgent)
+  || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1)
+  || window.matchMedia('(pointer: coarse)').matches;
+
+// Virtual key state — updated by the on-screen joystick/buttons, read in GameScene.update()
+const mobileKeys = { left:false, right:false, jump:false, down:false, atk:false, dash:false, par:false, hf:false, interact:false };
+
+// ══════════════════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════════════════
+function rn(a,b){return Math.random()*(b-a)+a;}
+function ri(a,b){return Math.floor(rn(a,b+1));}
+// fix #1: hx is a GLOBAL function, never repeated inside any class
+function hx(n){return '#'+n.toString(16).padStart(6,'0');}
+function px(g,x,y,w,h,c,a=1){g.fillStyle(c,a);g.fillRect(x,y,w,h);}
+
+// ══════════════════════════════════════════════════════════
+// WEB AUDIO — unlocked on first user gesture
+// ══════════════════════════════════════════════════════════
+const SFX = new (class{
+  constructor(){this.ctx=null;this.ok=false;}
+  unlock(){if(this.ok)return;try{this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.ok=true;}catch(e){}}
+  _t(f,tp,d,g=0.28,fe=null,dl=0){
+    if(!this.ok)return;const t=this.ctx.currentTime+dl;
+    const o=this.ctx.createOscillator(),gn=this.ctx.createGain();
+    o.type=tp;o.frequency.setValueAtTime(f,t);
+    if(fe)o.frequency.exponentialRampToValueAtTime(fe,t+d);
+    gn.gain.setValueAtTime(g,t);gn.gain.exponentialRampToValueAtTime(0.001,t+d);
+    o.connect(gn);gn.connect(this.ctx.destination);o.start(t);o.stop(t+d+0.05);
+  }
+  slash(){ this._t(400,'sawtooth',0.06,0.28,150); }
+  hurt(){  this._t(150,'sawtooth',0.14,0.4,60); }
+  land(){  this._t(100,'square',0.04,0.22,60); }
+  dash(){  this._t(700,'triangle',0.07,0.14,350); }
+  parry(){ this._t(1200,'sine',0.12,0.28,800); }
+  hfire(){ this._t(200,'sawtooth',0.28,0.38,700);this._t(400,'sine',0.2,0.18,500,0.05); }
+  bHit(){  this._t(110,'sawtooth',0.14,0.45,55); }
+  bRoar(){ for(let i=0;i<4;i++)this._t(55+i*14,'sawtooth',0.38,0.38,28,i*0.08); }
+  step(){  this._t(80,'square',0.025,0.08,45); }
+  coin(){  this._t(880,'sine',0.14,0.18,1100); }
+  lvup(){  [523,659,784,1047].forEach((f,i)=>this._t(f,'sine',0.14,0.18,null,i*0.09)); }
+  talk(){  this._t(600,'sine',0.04,0.07,480); }
+  ckpt(){  this._t(440,'sine',0.18,0.22,660);this._t(660,'sine',0.18,0.18,null,0.14); }
+})();
+
+// ══════════════════════════════════════════════════════════
+// PARTICLE SYSTEM — fix #4: single Graphics object for all particles
+// ══════════════════════════════════════════════════════════
+class Particles {
+  constructor(scene, depth=9){
+    this.gfx  = scene.add.graphics().setDepth(depth);
+    this.pool = new Array(350);
+    for(let i=0;i<350;i++)
+      this.pool[i]={act:false,x:0,y:0,vx:0,vy:0,gr:300,col:P.EMBER,sz:3,lf:0,ml:300};
+    this.n=350;
+  }
+  emit(x,y,cnt,cfg={}){
+    const{smn=60,smx=200,col=P.EMBER,szn=2,szx=6,lmn=200,lmx=500,
+          dmn=0,dmx=Math.PI*2,gr=300}=cfg;
+    let sp=0;
+    for(let i=0;i<this.n&&sp<cnt;i++){
+      const p=this.pool[i];if(p.act)continue;
+      const a=rn(dmn,dmx),s=rn(smn,smx);
+      p.act=true;p.x=x;p.y=y;p.vx=Math.cos(a)*s;p.vy=Math.sin(a)*s;
+      p.gr=gr;p.col=col;p.sz=rn(szn,szx);p.lf=rn(lmn,lmx);p.ml=p.lf;sp++;
+    }
+  }
+  burst(x,y,n,cfg={}){cfg.dmn=0;cfg.dmx=Math.PI*2;this.emit(x,y,n,cfg);}
+  update(delta){
+    const dt=delta*0.001;
+    this.gfx.clear();
+    for(let i=0;i<this.n;i++){
+      const p=this.pool[i];if(!p.act)continue;
+      p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.gr*dt;
+      p.lf-=delta;p.sz*=0.993;
+      if(p.lf<=0||p.sz<0.3){p.act=false;continue;}
+      const al=p.lf/p.ml;
+      this.gfx.fillStyle(p.col,al);
+      this.gfx.fillCircle(p.x,p.y,p.sz);
+    }
+  }
+  destroy(){this.gfx.destroy();}
+}
+
+// ══════════════════════════════════════════════════════════
+// TEXTURE GENERATION — pixel art, all procedural
+// ══════════════════════════════════════════════════════════
+function genAll(scene){
+  // ── PLAYER (48×64, white-hair warrior with red cloak) ──
+  function dp(g, leg=0, arm=0, st='idle'){
+    g.clear();
+    // cloak behind
+    px(g,2,18,10,34,P.CLOAK);px(g,4,20,8,30,P.CLOAK2);px(g,28,20,7,26,P.CLOAK);
+    // hair
+    px(g,8,0,18,8,P.HAIR);px(g,4,4,6,16,P.HAIR);px(g,10,0,14,4,P.HAIR);
+    // face
+    px(g,10,8,14,12,P.SKIN);
+    px(g,12,11,4,3,P.EYE);px(g,20,11,4,3,P.EYE);
+    // body armor
+    px(g,8,20,20,22,P.ARMOR);px(g,10,22,16,2,0x2E2E42);
+    // ember chest glow
+    px(g,15,26,8,6,P.EMBER);px(g,16,27,6,4,P.LAVA2,0.7);
+    // arms
+    px(g,4,20,6,14,P.ARMOR);px(g,26,20+arm,6,14,P.ARMOR);
+    // sword
+    px(g,32,10,3,4,P.SWORD2);px(g,32,14,3,26,P.SWORD);
+    px(g,30,26,7,4,0x5A3018);px(g,32,40,3,8,0x6A3A1A);
+    // legs
+    px(g,10,42,8,12+leg,P.ARMOR);px(g,20,42,8,12-leg,P.ARMOR);
+    // boots
+    px(g,8,54,10,8,P.BOOT);px(g,18,54,10,8,P.BOOT);
+    // state overlays
+    if(st==='atk1'){ px(g,26,14,6,18,P.ARMOR);px(g,32,8,4,32,P.SWORD);px(g,30,18,8,4,0x5A3018); }
+    if(st==='atk2'){ px(g,14,24,22,4,P.SWORD2);px(g,36,22,4,10,P.SWORD); }
+    if(st==='atk3'){ px(g,32,4,4,36,P.SWORD);px(g,32,4,4,8,P.EMBER);px(g,28,2,12,6,P.LAVA2,0.5); }
+    if(st==='dash'){ for(let i=1;i<4;i++)px(g,-i*8,10,36,42,P.CLOAK,0.12/i); }
+    if(st==='parry'){ px(g,4,16,28,6,P.SWORD2,0.8); }
+    if(st==='hurt'){ px(g,4,0,32,64,P.HP,0.38); }
+  }
+  [
+    ['p_i0',g=>dp(g,0,0)],['p_i1',g=>dp(g,1,1)],
+    ['p_w0',g=>dp(g,-4,0)],['p_w1',g=>dp(g,0,0)],['p_w2',g=>dp(g,4,0)],['p_w3',g=>dp(g,0,0)],
+    ['p_jp',g=>dp(g,-6,-2)],['p_fl',g=>dp(g,4,2)],
+    ['p_a1',g=>dp(g,0,0,'atk1')],['p_a2',g=>dp(g,0,0,'atk2')],['p_a3',g=>dp(g,0,0,'atk3')],
+    ['p_ds',g=>dp(g,-2,0,'dash')],['p_pr',g=>dp(g,0,0,'parry')],['p_ht',g=>dp(g,0,0,'hurt')],
+  ].forEach(([k,fn])=>{const g=scene.make.graphics({add:false});fn(g);g.generateTexture(k,48,64);g.destroy();});
+
+  // ── ASH SOLDIER (44×60) ──
+  {const g=scene.make.graphics({add:false});
+    px(g,2,16,8,30,0x333344);px(g,30,16,8,28,0x333344);
+    px(g,8,2,24,16,0xCCCCBB);px(g,10,6,5,5,0x330000);px(g,21,6,5,5,0x330000);
+    px(g,11,7,3,3,P.RED);px(g,22,7,3,3,P.RED);px(g,11,14,18,3,0xDDDDCC);
+    for(let i=0;i<4;i++)px(g,12+i*5,17,4,4,0xDDDDCC);
+    px(g,7,18,26,20,0x2A2A3A);px(g,9,20,22,4,0x383848);
+    px(g,1,18,8,16,0x2A2A3A);px(g,31,18,8,16,0x2A2A3A);
+    px(g,37,10,4,36,0x888898);px(g,34,20,11,4,0x4A2A10);
+    px(g,9,38,9,14,0x222230);px(g,22,38,9,14,0x222230);
+    px(g,7,52,13,6,0x1A1A28);px(g,20,52,13,6,0x1A1A28);
+    g.generateTexture('ash_sol',44,60);g.destroy();}
+  {const g=scene.make.graphics({add:false});
+    px(g,2,16,8,30,0x333344);px(g,30,16,8,28,0x333344);
+    px(g,8,2,24,16,0xCCCCBB);px(g,10,6,5,5,0x330000);px(g,21,6,5,5,0x330000);
+    px(g,11,7,3,3,P.RED);px(g,22,7,3,3,P.RED);px(g,11,14,18,3,0xDDDDCC);
+    px(g,7,18,26,20,0x2A2A3A);px(g,9,20,22,4,0x383848);
+    px(g,1,18,8,16,0x2A2A3A);px(g,31,16,8,18,0x2A2A3A);
+    px(g,37,2,4,42,0x888898);px(g,34,12,11,4,0x4A2A10);
+    px(g,9,38,9,14,0x222230);px(g,22,38,9,14,0x222230);
+    px(g,7,52,13,6,0x1A1A28);px(g,20,52,13,6,0x1A1A28);
+    g.generateTexture('ash_sol_a',44,60);g.destroy();}
+
+  // ── FIRE WRAITH (36×52) ──
+  {const g=scene.make.graphics({add:false});
+    px(g,4,16,28,32,0x1A0A2A,0.9);px(g,8,10,20,38,0x221232,0.95);
+    px(g,8,4,20,14,0x110818);px(g,6,6,24,10,0x1A0E22);
+    px(g,10,8,6,6,P.PURPLE);px(g,20,8,6,6,P.PURPLE);
+    px(g,11,9,4,4,0xFF66FF,0.9);px(g,21,9,4,4,0xFF66FF,0.9);
+    for(let i=0;i<5;i++)px(g,2+i*7,36+Math.round(Math.sin(i)*4),5,12,0x8822AA,0.6);
+    px(g,14,22,8,10,P.PURPLE);px(g,16,24,4,6,0xFF88FF,0.7);
+    g.generateTexture('wraith',36,52);g.destroy();}
+  {const g=scene.make.graphics({add:false});
+    px(g,2,14,32,34,0x1A0A2A,0.9);px(g,6,8,24,40,0x221232,0.95);
+    px(g,8,2,20,14,0x110818);px(g,6,4,24,10,0x1A0E22);
+    px(g,10,6,6,6,P.PURPLE);px(g,20,6,6,6,P.PURPLE);
+    px(g,11,7,4,4,0xFF66FF,0.9);px(g,21,7,4,4,0xFF66FF,0.9);
+    px(g,12,20,12,14,P.PURPLE);px(g,14,22,8,10,0xFF88FF,0.7);
+    for(let i=0;i<6;i++)px(g,i*6,32,6,16,0xAA33CC,0.5);
+    g.generateTexture('wraith_c',36,52);g.destroy();}
+
+  // ── BOSS P1 — Infernal Warden (120×168) ──
+  {const g=scene.make.graphics({add:false});
+    // Cloak
+    px(g,10,30,100,120,P.CLOAK,0.9);px(g,20,35,80,110,P.CLOAK2,0.6);
+    // Crown (contained within 0..119)
+    px(g,28,8,64,18,0x6A4A10);
+    for(let i=0;i<5;i++){const sx=30+i*12;px(g,sx,0,10,12,0x8A6010);px(g,sx+2,0,6,6,P.LAVA);}
+    px(g,20,18,80,10,0x5A3A08);
+    // Head
+    px(g,28,26,64,34,0x1C1420);px(g,30,30,60,26,0x241826);
+    px(g,36,32,48,18,0x1A1218,0.95);
+    // Eyes
+    px(g,38,36,16,8,P.LAVA);px(g,66,36,16,8,P.LAVA);
+    px(g,40,37,12,6,P.LAVA2);px(g,68,37,12,6,P.LAVA2);
+    // Neck/collar
+    px(g,42,60,36,10,0x1C1420);px(g,30,66,60,8,0x2A1C10);
+    // Chest
+    px(g,20,72,80,50,0x1A1220);px(g,24,76,72,42,0x22182A);
+    px(g,40,82,40,8,0x2E2238);
+    // Hellfire core
+    px(g,50,88,20,18,P.LAVA);px(g,52,90,16,14,P.LAVA2);px(g,54,92,12,10,P.EMBER);
+    // Pauldrons
+    px(g,4,64,26,38,0x1A1220);px(g,4,62,18,10,0x2A1C10);
+    px(g,90,64,26,38,0x1A1220);px(g,98,62,18,10,0x2A1C10);
+    // Left arm + sword (all within 0..119)
+    px(g,4,96,22,50,0x1A1220);px(g,6,98,18,46,0x22182A);
+    px(g,2,140,26,20,0x2A1C10);
+    px(g,6,62,8,96,0x6A6A8A);px(g,6,62,8,28,0x9898B8);px(g,4,100,18,8,0x4A2A10);px(g,6,106,8,28,0x3A1A08);
+    // Right arm
+    px(g,94,96,22,50,0x1A1220);px(g,96,98,18,46,0x22182A);
+    px(g,92,140,26,22,0x2A1C10);px(g,96,152,20,14,P.LAVA,0.55);
+    // Legs
+    px(g,28,120,64,38,0x1A1220);px(g,32,124,56,34,0x22182A);
+    px(g,26,154,28,16,0x1A1220);px(g,24,166,32,8,0x2A1C10);
+    px(g,66,154,28,16,0x1A1220);px(g,64,166,32,8,0x2A1C10);
+    for(let i=0;i<6;i++){px(g,ri(20,100),ri(70,150),ri(4,10),ri(8,18),P.LAVA,0.25);}
+    g.generateTexture('boss_p1',120,168);g.destroy();}
+
+  // ── BOSS P2 (phase 2 — aflame) ──
+  {const g=scene.make.graphics({add:false});
+    px(g,10,30,100,120,P.CLOAK,0.9);px(g,20,35,80,110,P.LAVA,0.22);
+    px(g,28,8,64,18,0x6A4A10);
+    for(let i=0;i<5;i++){const sx=30+i*12;px(g,sx,0,10,14,0x8A6010);px(g,sx+2,0,6,8,P.LAVA);}
+    px(g,20,18,80,10,0x5A3A08);
+    px(g,28,26,64,34,0x1C1420);px(g,30,30,60,26,0x241826);
+    px(g,36,32,48,18,0x1A1218,0.95);
+    px(g,38,36,16,8,P.LAVA2);px(g,66,36,16,8,P.LAVA2);
+    px(g,34,32,24,14,P.EMBER,0.45);px(g,62,32,24,14,P.EMBER,0.45);
+    px(g,42,60,36,10,0x1C1420);px(g,30,66,60,8,0x2A1C10);
+    px(g,20,72,80,50,0x1A1220);px(g,24,76,72,42,0x22182A);
+    px(g,46,86,28,24,P.LAVA2);px(g,50,88,20,18,P.EMBER);px(g,52,90,16,14,0xFFCC00);
+    for(let i=0;i<14;i++){px(g,ri(0,116),ri(0,160),ri(4,14),ri(8,26),P.LAVA,0.18+Math.random()*0.18);}
+    px(g,4,64,26,38,0x1A1220);px(g,4,62,18,10,0x2A1C10);
+    px(g,90,64,26,38,0x1A1220);px(g,98,62,18,10,0x2A1C10);
+    px(g,4,96,22,50,0x1A1220);px(g,6,98,18,46,0x22182A);px(g,2,140,26,20,0x2A1C10);
+    px(g,6,62,8,96,0x7A7A9A);px(g,6,62,8,4,P.EMBER);px(g,4,100,18,8,0x4A2A10);px(g,6,106,8,28,0x3A1A08);
+    px(g,94,96,22,50,0x1A1220);px(g,96,98,18,46,0x22182A);
+    px(g,28,120,64,38,0x1A1220);px(g,32,124,56,34,0x22182A);
+    px(g,26,154,28,16,0x1A1220);px(g,24,166,32,8,0x2A1C10);
+    px(g,66,154,28,16,0x1A1220);px(g,64,166,32,8,0x2A1C10);
+    g.generateTexture('boss_p2',120,168);g.destroy();}
+
+  // ── BOSS P3 (shattered, blazing core) ──
+  {const g=scene.make.graphics({add:false});
+    // Flame wings
+    for(let i=0;i<10;i++){
+      px(g,i*3,60+i*4,18-i,46-i*4,P.LAVA,0.42-i*0.04);
+      px(g,104+i*2,60+i*4,18-i,46-i*4,P.LAVA,0.42-i*0.04);
+    }
+    px(g,10,30,100,120,P.BOSS,0.9);
+    px(g,30,72,60,50,0x110810);
+    px(g,36,78,48,40,P.LAVA,0.65);px(g,40,82,40,32,P.LAVA2,0.78);
+    px(g,44,86,32,24,P.EMBER,0.9);px(g,48,90,24,14,0xFFCC00,1);
+    px(g,28,26,64,38,0x1C1420);px(g,30,30,60,26,0x241826);
+    px(g,28,8,64,20,0x6A4A10);
+    for(let i=0;i<6;i++){const sx=28+i*11;px(g,sx,0,10,14,P.LAVA);px(g,sx+2,0,6,9,P.EMBER);}
+    px(g,34,34,22,12,P.EMBER);px(g,64,34,22,12,P.EMBER);
+    px(g,28,30,30,20,0xFFAA00,0.35);px(g,62,30,30,20,0xFFAA00,0.35);
+    px(g,2,62,24,42,0x110810);px(g,94,62,24,42,0x110810);
+    px(g,2,96,22,52,0x110810);px(g,96,96,22,52,0x110810);
+    px(g,6,62,8,94,0x7A7A9A);px(g,4,98,18,8,0x4A2A10);px(g,6,104,8,28,0x3A1A08);
+    px(g,28,118,64,40,0x110810);
+    px(g,26,154,28,18,0x110810);px(g,66,154,28,18,0x110810);
+    for(let i=0;i<8;i++)px(g,26+i*9,162+ri(0,4),10,ri(10,22),P.LAVA,0.45);
+    g.generateTexture('boss_p3',120,168);g.destroy();}
+
+  // ── WORLD TILES ──
+  {const g=scene.make.graphics({add:false});
+    px(g,0,0,40,40,P.STONE);px(g,2,2,36,36,P.STONE2);
+    px(g,0,0,40,2,P.STONE3);px(g,0,38,40,2,P.STONE3);
+    px(g,0,0,2,40,P.STONE3);px(g,38,0,2,40,P.STONE3);
+    px(g,4,4,8,4,0x1E2A10,0.35);
+    g.generateTexture('tile',40,40);g.destroy();}
+  {const g=scene.make.graphics({add:false});
+    px(g,0,0,40,20,P.LAVA);
+    for(let i=0;i<5;i++)px(g,ri(0,30),ri(0,12),ri(4,8),ri(3,7),P.EMBER,0.55);
+    g.generateTexture('tile_lava',40,20);g.destroy();}
+
+  // ── COLLECTIBLES ──
+  {const g=scene.make.graphics({add:false});
+    px(g,6,0,8,20,P.EMBER);px(g,4,4,12,12,P.LAVA2);px(g,6,6,8,8,P.LAVA);
+    px(g,0,8,20,4,P.EMBER,0.45);g.generateTexture('ember',20,20);g.destroy();}
+  {const g=scene.make.graphics({add:false});
+    g.fillStyle(P.GOLD,1);g.fillCircle(10,10,10);
+    g.fillStyle(0xDDAA00,1);g.fillCircle(10,10,7);
+    g.fillStyle(P.GOLD,1);g.fillCircle(10,10,4);
+    g.generateTexture('coin',20,20);g.destroy();}
+
+  // ── BONFIRE ──
+  {const g=scene.make.graphics({add:false});
+    px(g,8,28,24,10,0x3A2010);px(g,4,32,8,6,0x2A1408);px(g,28,32,8,6,0x2A1408);
+    px(g,14,8,12,24,P.LAVA,0.9);px(g,16,4,8,26,P.LAVA2);px(g,18,0,4,28,P.EMBER);
+    px(g,4,10,32,18,P.EMBER,0.18);g.generateTexture('bonfire',40,40);g.destroy();}
+
+  // ── NPC ELDER ARIC ──
+  {const g=scene.make.graphics({add:false});
+    px(g,8,20,24,44,0x2A2A3A);px(g,10,22,20,40,0x333344);
+    px(g,10,4,20,18,P.SKIN);px(g,8,6,24,14,0xB89068);
+    px(g,10,16,20,14,0xEEEEE0);px(g,12,22,16,10,0xEEEEE0);
+    px(g,12,10,4,4,0xCCCCCC);px(g,22,10,4,4,0xCCCCCC);
+    px(g,32,10,4,54,0x4A3018);px(g,28,10,12,6,P.EMBER);
+    px(g,8,2,24,8,0xE8E8E8);px(g,6,4,6,14,0xE8E8E8);
+    g.generateTexture('npc',40,64);g.destroy();}
+
+  // ── BOSS DOOR ──
+  {const g=scene.make.graphics({add:false});
+    px(g,0,0,80,120,0x1A0808);px(g,4,4,72,112,0x220C0C);
+    px(g,0,0,8,120,0x1C1010);px(g,72,0,8,120,0x1C1010);px(g,0,0,80,8,0x1C1010);
+    px(g,30,40,20,40,P.LAVA,0.55);px(g,36,36,8,48,P.LAVA2,0.75);
+    px(g,20,56,40,4,P.LAVA2,0.65);px(g,20,30,40,60,P.EMBER,0.12);
+    g.generateTexture('bossdoor',80,120);g.destroy();}
+
+  // ── 1×1 utility pixel ──
+  {const g=scene.make.graphics({add:false});
+    g.fillStyle(0xFFFFFF,1);g.fillRect(0,0,1,1);g.generateTexture('px',1,1);g.destroy();}
+}
+
+// ══════════════════════════════════════════════════════════
+// PLAYER CLASS
+// ══════════════════════════════════════════════════════════
+class Player {
+  constructor(scene, x, y){
+    this.sc=scene;
+    // Stats
+    this.lv=1;this.xp=0;this.xpN=100;
+    this.mhp=150;this.hp=150;this.mmp=60;this.mp=60;
+    this.gold=0;this.ember=0;
+    this.str=10;this.vit=10;this.dex=10;this.intel=10;this.lck=10;
+    this.crit=0.1;
+
+    // NOTE: physics.add.sprite is affected by the world gravity set in Phaser config
+    this.spr=scene.physics.add.sprite(x,y,'p_i0');
+    this.spr.setDepth(8);
+    this.spr.setCollideWorldBounds(true);
+    this.spr.body.setSize(28,56);this.spr.body.setOffset(10,8);
+
+    // State
+    this.st='idle';this.dir=1;
+    this.onG=false;this.onW=false;this.wSide=0;
+    this.canDJ=true;this.coyote=0;
+    this.dashCD=0;this.dashT=0;this.dashDir=1;
+    this.atkT=0;this.comboI=0;this.comboT=0;
+    this.parryT=0;this.parrySuc=false;
+    this.hurtT=0;this.invT=0;
+    this.atkBox={x:0,y:0,w:0,h:0,act:false};this.atkHit=false;
+    this.frmT=0;this.frmI=0;this.stepT=0;this.mpRegT=0;
+    this.pJ=false;this.pA=false;this.pD=false;this.pP=false;this.pH=false;
+  }
+  get atk(){return Math.floor((10+this.str*1.5)*(1+this.lv*0.05));}
+
+  update(dt, delta, keys, plats, enemies, boss){
+    const body=this.spr.body;
+    this.onG=body.blocked.down;
+    this.onW=(body.blocked.left||body.blocked.right)&&!this.onG;
+    this.wSide=body.blocked.left?-1:body.blocked.right?1:0;
+    if(this.onG){this.coyote=120;this.canDJ=true;}
+    else if(this.coyote>0)this.coyote-=delta;
+    if(this.dashCD>0)this.dashCD-=delta;
+    if(this.comboT>0)this.comboT-=delta;
+    if(this.atkT>0)this.atkT-=delta;
+    if(this.parryT>0)this.parryT-=delta;
+    if(this.hurtT>0)this.hurtT-=delta;
+    if(this.invT>0)this.invT-=delta;
+    if(this.mpRegT>0)this.mpRegT-=delta;
+    else{this.mp=Math.min(this.mmp,this.mp+2*dt);this.mpRegT=500;}
+    if(this.comboT<=0&&this.atkT<=0)this.comboI=0;
+
+    const jJ=keys.jump&&!this.pJ,jA=keys.atk&&!this.pA,
+          jD=keys.dash&&!this.pD,jP=keys.par&&!this.pP,jH=keys.hf&&!this.pH;
+
+    if(this.st==='dead'){this._anim();return;}
+    if(this.st==='hurt'){
+      if(this.hurtT<=0)this.st=this.onG?'idle':'fall';
+      this._anim();return;
+    }
+    if(this.st==='dash'){
+      this.dashT-=delta;
+      body.setVelocityX(this.dashDir*DASH_VEL);
+      body.setVelocityY(-body.velocity.y*0.1); // damp vertical
+      if(this.dashT<=0){this.st=this.onG?'idle':'fall';this.invT=0;}
+    }
+    else if(this.st==='parry'){
+      body.setVelocityX(body.velocity.x*0.6);
+      if(this.parryT<=0){
+        this.st=this.onG?'idle':'fall';
+        if(this.parrySuc){this._counter(enemies,boss);this.parrySuc=false;}
+      }
+    }
+    else if(this.st==='attack'){
+      body.setVelocityX(body.velocity.x*0.65);
+      if(this.atkT<=0){
+        if(jA&&this.comboI<2&&this.comboT>0){this.comboI++;this._doAtk();}
+        else{this.st=this.onG?'idle':'fall';this.atkBox.act=false;}
+      }
+      this._atkBoxUpdate();this._atkHitCheck(enemies,boss);
+    }
+    else{
+      // movement
+      if(keys.left){body.setVelocityX(-WALK_SPD);this.dir=-1;if(this.onG)this.st='walk';}
+      else if(keys.right){body.setVelocityX(WALK_SPD);this.dir=1;if(this.onG)this.st='walk';}
+      else{body.setVelocityX(body.velocity.x*0.72);if(this.onG&&Math.abs(body.velocity.x)<10)this.st='idle';}
+      // jump
+      if(jJ){
+        if(this.onW&&!this.onG){
+          body.setVelocityY(WJUMP_VY);body.setVelocityX(-this.wSide*WJUMP_VX);
+          this.dir=-this.wSide;this.st='jump';SFX.dash();
+        } else if(this.coyote>0){
+          body.setVelocityY(JUMP_VEL);this.coyote=0;this.st='jump';SFX.land();
+        } else if(this.canDJ){
+          body.setVelocityY(DJUMP_VEL);this.canDJ=false;this.st='jump';
+          this.sc.events.emit('p-djump',this.spr.x,this.spr.y);SFX.dash();
+        }
+      }
+      // dash
+      if(jD&&this.dashCD<=0){
+        this.st='dash';this.dashDir=this.dir;this.dashT=DASH_MS;this.dashCD=600;this.invT=DASH_MS;SFX.dash();
+        this.sc.events.emit('p-dash',this.spr.x,this.spr.y,this.dir);
+      }
+      // parry
+      if(jP){this.st='parry';this.parryT=270;this.parrySuc=false;SFX.parry();
+        this.sc.events.emit('p-parry',this.spr.x,this.spr.y);}
+      // attack
+      if(jA&&this.atkT<=0){this.comboI=0;this._doAtk();}
+      // hellfire
+      if(jH&&this.mp>=20){
+        this.mp-=20;this._hellfire(enemies,boss);SFX.hfire();
+        this.sc.events.emit('p-hfire',this.spr.x,this.spr.y);
+      }
+      // air state
+      if(!this.onG&&this.st!=='jump'&&body.velocity.y>80)this.st='fall';
+      if(this.onG&&(this.st==='jump'||this.st==='fall')){this.st='idle';SFX.land();}
+    }
+    // facing flip
+    this.spr.setFlipX(this.dir===-1);
+    // step sfx
+    if(this.st==='walk'&&this.onG){this.stepT-=delta;if(this.stepT<=0){SFX.step();this.stepT=350;}}
+    this._anim();
+    if(this.st==='dash'||this.st==='attack')this.sc.events.emit('p-ember',this.spr.x,this.spr.y);
+    this.pJ=keys.jump;this.pA=keys.atk;this.pD=keys.dash;this.pP=keys.par;this.pH=keys.hf;
+  }
+
+  _doAtk(){
+    this.st='attack';this.atkT=255;this.comboT=480;this.atkHit=false;this.atkBox.act=true;
+    SFX.slash();this.sc.events.emit('p-slash',this.spr.x,this.spr.y,this.comboI);
+  }
+  _atkBoxUpdate(){
+    const bx=this.spr.x+(this.dir===1?22:-70),by=this.spr.y-12;
+    const c=this.comboI;
+    if(c===0)this.atkBox={x:bx,y:by,w:58,h:48,act:true};
+    else if(c===1)this.atkBox={x:bx-10,y:by-8,w:78,h:58,act:true};
+    else this.atkBox={x:bx-18,y:by-18,w:98,h:68,act:true};
+    this.atkBox.act=this.atkT>120;
+  }
+  _atkHitCheck(enemies,boss){
+    if(!this.atkBox.act||this.atkHit)return;
+    const box=this.atkBox;
+    const crit=Math.random()<this.crit+this.lck*0.008;
+    const dmg=Math.floor(this.atk*(this.comboI===2?2:1)*(crit?1.8:1));
+    if(enemies){for(const e of enemies){if(!e.alive)continue;
+      if(this._overlap(box,e.hitbox())){e.hit(dmg,this.dir);this.atkHit=true;
+        this.sc.events.emit('hit-e',e.spr.x,e.spr.y,dmg,crit);}}}
+    if(boss&&boss.alive&&this._overlap(box,boss.hitbox())){
+      boss.hit(dmg,this.dir);this.atkHit=true;
+      this.sc.events.emit('hit-b',boss.spr.x,boss.spr.y,dmg,crit);}
+  }
+  _counter(enemies,boss){
+    const dmg=this.atk*3,r=120;
+    if(enemies)enemies.forEach(e=>{if(!e.alive)return;if(Math.abs(e.spr.x-this.spr.x)<r)e.hit(dmg,this.dir);});
+    if(boss&&boss.alive&&Math.abs(boss.spr.x-this.spr.x)<r*1.6)boss.hit(dmg,this.dir);
+    this.sc.events.emit('p-counter',this.spr.x,this.spr.y);SFX.slash();
+  }
+  _hellfire(enemies,boss){
+    const dmg=Math.floor(this.intel*4+20),r=220;
+    if(enemies)enemies.forEach(e=>{if(!e.alive)return;if(Math.abs(e.spr.x-this.spr.x)<r)e.hit(dmg,this.dir);});
+    if(boss&&boss.alive&&Math.abs(boss.spr.x-this.spr.x)<r*1.5)boss.hit(Math.floor(dmg*0.7),this.dir);
+  }
+  _overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
+  takeDmg(amt){
+    if(this.invT>0)return;
+    if(this.st==='parry'){this.parrySuc=true;return;}
+    this.hp=Math.max(0,this.hp-amt);this.hurtT=290;this.invT=800;this.st='hurt';
+    this.spr.body.setVelocityX(-this.dir*190);this.spr.body.setVelocityY(-140);
+    SFX.hurt();this.sc.events.emit('p-hurt',this.spr.x,this.spr.y,amt);
+    if(this.hp<=0){this.st='dead';this.sc.events.emit('p-dead');}
+  }
+  gainXP(amt){
+    this.xp+=amt;
+    if(this.xp>=this.xpN){
+      this.xp-=this.xpN;this.lv++;this.xpN=Math.floor(this.xpN*1.4);
+      this.str+=2;this.vit+=2;this.dex+=1;this.intel+=1;this.lck+=1;
+      this.mhp+=20;this.hp=Math.min(this.hp+20,this.mhp);
+      this.mmp+=8;this.mp=Math.min(this.mp+8,this.mmp);
+      SFX.lvup();this.sc.events.emit('lvup',this.lv,this.spr.x,this.spr.y);
+    }
+  }
+  _anim(){
+    const map={
+      idle:['p_i0','p_i1'],walk:['p_w0','p_w1','p_w2','p_w3'],
+      jump:['p_jp'],fall:['p_fl'],dash:['p_ds'],
+      attack:this.comboI===0?['p_a1']:this.comboI===1?['p_a2']:['p_a3'],
+      parry:['p_pr'],hurt:['p_ht'],dead:['p_ht'],
+    };
+    const fr=map[this.st]||map.idle;
+    const sp=this.st==='idle'?480:this.st==='walk'?115:80;
+    this.frmT+=16;if(this.frmT>=sp){this.frmT=0;this.frmI=(this.frmI+1)%fr.length;}
+    this.spr.setTexture(fr[this.frmI]||fr[0]);
+    this.spr.setAlpha(this.invT>0?Math.sin(Date.now()*0.025)>0?1:0.3:1);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// ENEMY CLASS
+// ══════════════════════════════════════════════════════════
+class Enemy {
+  constructor(scene,x,y,type){
+    this.sc=scene;this.type=type;this.alive=true;
+    this.maxhp=type==='ash_sol'?45:55;this.hp=this.maxhp;
+    this.xpr=type==='ash_sol'?30:50;this.goldr=type==='ash_sol'?5:12;
+    this.st='patrol';this.dir=1;this.stT=0;this.atkCD=0;this.hurtT=0;
+    this.pL=x-170;this.pR=x+170;
+
+    const tex=type==='ash_sol'?'ash_sol':'wraith';
+    this.spr=scene.physics.add.sprite(x,y,tex);
+    this.spr.setDepth(7);
+    if(type==='wraith'){
+      // wraith floats — body gravity cancels world gravity
+      this.spr.body.setGravityY(-GRAV);
+      this.spr.body.setSize(28,42);this.spr.body.setOffset(4,5);
+    } else {
+      this.spr.body.setSize(30,52);this.spr.body.setOffset(7,6);
+    }
+  }
+  hitbox(){return{x:this.spr.x-15,y:this.spr.y-28,w:30,h:56};}
+  hit(amt,dir){
+    if(!this.alive)return;
+    this.hp=Math.max(0,this.hp-amt);this.hurtT=180;this.st='hurt';
+    this.spr.body.setVelocityX(-dir*160);
+    if(this.type==='ash_sol')this.spr.body.setVelocityY(-90);
+    this.spr.setTintFill(0xFFFFFF);
+    this.sc.time.delayedCall(90,()=>{if(this.spr&&this.spr.active)this.spr.clearTint();});
+    if(this.hp<=0)this._die();
+  }
+  _die(){
+    this.alive=false;this.spr.setAlpha(0);this.spr.body.enable=false;
+    this.sc.events.emit('e-dead',this.spr.x,this.spr.y,this.type,this.xpr,this.goldr);
+    if(Math.random()<0.28)this.sc.events.emit('pu-drop',this.spr.x,this.spr.y);
+  }
+  update(delta,px,py){
+    if(!this.alive)return;
+    const dt=delta*0.001;
+    this.stT+=delta;
+    if(this.hurtT>0){this.hurtT-=delta;if(this.hurtT<=0)this.st='patrol';return;}
+    if(this.atkCD>0)this.atkCD-=delta;
+    const dx=px-this.spr.x,dy=py-this.spr.y,ax=Math.abs(dx),ay=Math.abs(dy);
+
+    if(this.type==='ash_sol'){
+      if(ax<270&&ay<100)this.st=ax<55?'attack':'chase';else this.st='patrol';
+      if(this.st==='patrol'){
+        this.spr.body.setVelocityX(this.dir*72);
+        if(this.spr.x<=this.pL||this.spr.x>=this.pR)this.dir*=-1;
+      } else if(this.st==='chase'){
+        this.spr.body.setVelocityX(Math.sign(dx)*135);this.dir=Math.sign(dx);
+      } else {
+        this.spr.body.setVelocityX(0);
+        if(this.atkCD<=0){
+          this.atkCD=1350;
+          this.spr.setTexture('ash_sol_a');
+          this.sc.time.delayedCall(280,()=>{if(this.spr&&this.spr.active)this.spr.setTexture('ash_sol');});
+          this.sc.events.emit('e-atk',this.spr.x,this.spr.y,this.type,Math.sign(dx));
+        }
+      }
+      this.spr.setFlipX(this.dir<0);
+    } else {
+      // fire wraith — flies
+      if(ax<330&&ay<190)this.st=ax<70?'attack':'chase';else this.st='float';
+      if(this.st==='float'){
+        this.spr.body.setVelocityX(this.dir*55);
+        this.spr.y+=Math.sin(this.stT*0.002)*0.7;
+        if(this.spr.x<=this.pL||this.spr.x>=this.pR)this.dir*=-1;
+        this.spr.setTexture('wraith');
+      } else if(this.st==='chase'){
+        this.spr.body.setVelocityX(Math.sign(dx)*105);
+        this.spr.body.setVelocityY(Math.sign(dy)*55);
+        this.spr.setTexture('wraith_c');
+      } else {
+        this.spr.body.setVelocityX(Math.sign(dx)*190);
+        this.spr.setTexture('wraith_c');
+        if(this.atkCD<=0){
+          this.atkCD=1150;
+          this.sc.events.emit('e-atk',this.spr.x,this.spr.y,this.type,Math.sign(dx));
+        }
+      }
+      this.spr.setFlipX(dx<0);
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// BOSS: THE FALLEN KING (IGNIVAR)
+// ══════════════════════════════════════════════════════════
+class FallenKing {
+  constructor(scene,x,y){
+    this.sc=scene;this.maxhp=800;this.hp=800;this.alive=true;
+    this.phase=1;this.st='idle';this.stT=0;this.atkCD=0;this.hurtT=0;
+    this.phase2=false;this.phase3=false;this.charDir=1;this.charT=0;this.swT=0;
+    this.dlg=[
+      {hp:800,txt:'You dare enter my throne... child of ash?'},
+      {hp:600,txt:'I remember your dynasty... THEY BURNED MY KINGDOM!'},
+      {hp:400,txt:'No... that ember... you carry the last flame...'},
+      {hp:200,txt:'THEN LET IT DIE WITH YOU!!!'},
+      {hp:0,  txt:'The flame... it was never yours to guard alone...'},
+    ];
+    this.dlgShown=new Set();
+
+    this.spr=scene.physics.add.sprite(x,y,'boss_p1');
+    this.spr.setDepth(7);this.spr.setCollideWorldBounds(true);
+    this.spr.body.setSize(100,158);this.spr.body.setOffset(10,10);
+  }
+  hitbox(){return{x:this.spr.x-50,y:this.spr.y-80,w:100,h:158};}
+  hit(amt){
+    if(!this.alive||this.hurtT>0)return;
+    this.hp=Math.max(0,this.hp-amt);this.hurtT=160;
+    this.spr.setTintFill(0xFFFFFF);
+    this.sc.time.delayedCall(110,()=>{if(this.spr&&this.spr.active)this.spr.clearTint();});
+    SFX.bHit();this.sc.events.emit('hit-boss-vfx',this.spr.x,this.spr.y,amt);
+    // phase transitions
+    if(this.hp<=500&&!this.phase2){
+      this.phase2=true;this.phase=2;this.spr.setTexture('boss_p2');
+      this.sc.events.emit('boss-phase',2);SFX.bRoar();
+    }
+    if(this.hp<=250&&!this.phase3){
+      this.phase3=true;this.phase=3;this.spr.setTexture('boss_p3');
+      this.sc.events.emit('boss-phase',3);SFX.bRoar();
+      this.sc.cameras.main.shake(580,0.024);
+    }
+    // dialogue
+    for(const d of this.dlg){
+      if(this.hp<=d.hp&&!this.dlgShown.has(d.hp)){
+        this.dlgShown.add(d.hp);this.sc.events.emit('boss-dlg',d.txt);
+        if(d.hp===0){this._kill();}
+        break;
+      }
+    }
+    if(this.hp<=0&&this.alive)this._kill();
+  }
+  _kill(){
+    if(!this.alive)return;
+    this.alive=false;
+    this.sc.events.emit('boss-dead',this.spr.x,this.spr.y);
+    if(this.spr&&this.spr.active){this.spr.setAlpha(0);this.spr.body.enable=false;}
+  }
+  update(delta,px,py){
+    if(!this.alive)return;
+    const dt=delta*0.001;
+    if(this.hurtT>0){this.hurtT-=delta;return;}
+    if(this.atkCD>0)this.atkCD-=delta;
+    this.stT+=delta;
+    const dx=px-this.spr.x,ax=Math.abs(dx);
+    const spd=this.phase===1?115:this.phase===2?175:235;
+    const rng=this.phase===1?130:160;
+    const cd =this.phase===1?1550:this.phase===2?1050:700;
+    if(this.st==='idle'){
+      this.spr.body.setVelocityX(0);
+      if(this.stT>550){this.st='approach';this.stT=0;}
+    } else if(this.st==='approach'){
+      this.spr.body.setVelocityX(Math.sign(dx)*spd);
+      this.spr.setFlipX(dx<0);
+      if(ax<rng)this.st='attack';
+      if(this.stT>3000){this.st='idle';this.stT=0;}
+    } else if(this.st==='attack'){
+      this.spr.body.setVelocityX(0);
+      if(this.atkCD<=0){
+        this.atkCD=cd;
+        const roll=this.phase>=2&&Math.random()<0.45?'charge':'slam';
+        if(roll==='charge'){this.st='charge';this.charDir=Math.sign(dx);this.charT=780;}
+        else this.sc.events.emit('boss-atk',this.spr.x,this.spr.y,'slam',Math.sign(dx));
+      }
+      if(this.stT>1800){this.st='approach';this.stT=0;}
+    } else if(this.st==='charge'){
+      this.charT-=delta;
+      this.spr.body.setVelocityX(this.charDir*spd*2.4);
+      this.spr.setFlipX(this.charDir<0);
+      this.sc.events.emit('boss-atk',this.spr.x,this.spr.y,'charge',this.charDir);
+      if(this.charT<=0){this.st='idle';this.stT=0;}
+    }
+    if(this.phase>=2){
+      this.swT-=delta;
+      if(this.swT<=0){
+        this.swT=this.phase===3?3800:6200;
+        this.sc.events.emit('boss-sw',this.spr.x,this.spr.y,this.phase);
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// DIALOGUE SYSTEM
+// ══════════════════════════════════════════════════════════
+class Dlg {
+  constructor(scene){
+    this.sc=scene;this.vis=false;this.txt='';this.spk='';this.cb=null;this.ci=0;this.timer=0;
+    const bx=40,by=GH-178;
+    this.bg=scene.add.graphics().setDepth(30).setScrollFactor(0);
+    this.bg.fillStyle(0x080408,0.93);this.bg.fillRoundedRect(bx,by,GW-80,132,8);
+    this.bg.lineStyle(2,P.CLOAK,0.7);this.bg.strokeRoundedRect(bx,by,GW-80,132,8);
+    this.bg.setVisible(false);
+    this.port=scene.add.image(80,by+66,'npc').setDepth(31).setScrollFactor(0).setScale(1.05).setVisible(false);
+    this.nTxt=scene.add.text(128,by+14,'',{fontFamily:'Cinzel',fontSize:'15px',color:'#FFB870',stroke:'#000',strokeThickness:2}).setDepth(31).setScrollFactor(0).setVisible(false);
+    this.bTxt=scene.add.text(128,by+42,'',{fontFamily:'Crimson Text',fontSize:'17px',color:'#EEE8D8',wordWrap:{width:GW-210},lineSpacing:5}).setDepth(31).setScrollFactor(0).setVisible(false);
+    this.hnt=scene.add.text(GW-52,by+108,'▼ continue',{fontFamily:'Share Tech Mono',fontSize:'11px',color:'#665544'}).setOrigin(1,0).setDepth(31).setScrollFactor(0).setVisible(false);
+  }
+  show(spk,txt,portKey='npc',cb=null){
+    this.spk=spk;this.txt=txt;this.cb=cb;this.ci=0;this.timer=0;this.vis=true;
+    this.bg.setVisible(true);this.port.setTexture(portKey||'npc').setVisible(true);
+    this.nTxt.setText(spk).setVisible(true);
+    this.bTxt.setText('').setVisible(true);this.hnt.setVisible(false);SFX.talk();
+  }
+  advance(){
+    if(!this.vis)return;
+    if(this.ci<this.txt.length){this.ci=this.txt.length;this.bTxt.setText(this.txt);this.hnt.setVisible(true);}
+    else{this.hide();if(this.cb)this.cb();}
+  }
+  hide(){
+    this.vis=false;[this.bg,this.port,this.nTxt,this.bTxt,this.hnt].forEach(o=>o.setVisible(false));
+  }
+  update(delta){
+    if(!this.vis)return;
+    if(this.ci<this.txt.length){
+      this.timer+=delta;const n=Math.floor(this.timer*38/1000);
+      if(n>this.ci){this.ci=Math.min(n,this.txt.length);this.bTxt.setText(this.txt.substring(0,this.ci));
+        if(this.ci>=this.txt.length)this.hnt.setVisible(true);}
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// HUD
+// ══════════════════════════════════════════════════════════
+class HUD {
+  constructor(scene,player){
+    this.sc=scene;this.pl=player;
+    // Portrait bg
+    this.pBg=scene.add.graphics().setDepth(20).setScrollFactor(0);
+    this.pBg.fillStyle(0x110808,0.9);this.pBg.fillCircle(50,50,40);
+    this.pBg.lineStyle(2,P.CLOAK,0.8);this.pBg.strokeCircle(50,50,40);
+    this.port=scene.add.image(50,52,'p_i0').setScrollFactor(0).setDepth(21).setScale(0.65).setOrigin(0.5);
+    // Bar bg
+    this.bBg=scene.add.graphics().setDepth(20).setScrollFactor(0);
+    this.bBg.fillStyle(0x080408,0.88);this.bBg.fillRoundedRect(96,14,220,80,6);
+    this.bBg.lineStyle(1,0x332222,0.6);this.bBg.strokeRoundedRect(96,14,220,80,6);
+    // Bars
+    this.hBar=scene.add.graphics().setDepth(21).setScrollFactor(0);
+    this.mBar=scene.add.graphics().setDepth(21).setScrollFactor(0);
+    this.xBar=scene.add.graphics().setDepth(21).setScrollFactor(0);
+    // Labels
+    scene.add.text(104,22,'HP',{fontFamily:'Cinzel',fontSize:'11px',color:'#CC3333',stroke:'#000',strokeThickness:1}).setDepth(22).setScrollFactor(0);
+    scene.add.text(104,50,'MP',{fontFamily:'Cinzel',fontSize:'11px',color:'#3355CC',stroke:'#000',strokeThickness:1}).setDepth(22).setScrollFactor(0);
+    this.hVal=scene.add.text(302,22,'',{fontFamily:'Share Tech Mono',fontSize:'12px',color:'#CC3333'}).setDepth(22).setScrollFactor(0).setOrigin(1,0);
+    this.mVal=scene.add.text(302,50,'',{fontFamily:'Share Tech Mono',fontSize:'12px',color:'#3355CC'}).setDepth(22).setScrollFactor(0).setOrigin(1,0);
+    this.lvT=scene.add.text(104,76,'',{fontFamily:'Cinzel',fontSize:'12px',color:'#FFAA33'}).setDepth(22).setScrollFactor(0);
+    // Gold & Ember top-centre
+    scene.add.image(GW/2-60,28,'coin').setScrollFactor(0).setDepth(21).setScale(0.9);
+    this.gldT=scene.add.text(GW/2-44,20,'0',{fontFamily:'Cinzel',fontSize:'16px',color:'#FFD700',stroke:'#000',strokeThickness:2}).setDepth(22).setScrollFactor(0);
+    scene.add.image(GW/2+40,28,'ember').setScrollFactor(0).setDepth(21).setScale(0.9);
+    this.embT=scene.add.text(GW/2+56,20,'0',{fontFamily:'Cinzel',fontSize:'16px',color:'#FF7700',stroke:'#000',strokeThickness:2}).setDepth(22).setScrollFactor(0);
+    // Area
+    this.areT=scene.add.text(GW-14,14,'ASHEN KEEP',{fontFamily:'Cinzel',fontSize:'14px',color:'#886655',stroke:'#000',strokeThickness:2}).setDepth(22).setScrollFactor(0).setOrigin(1,0);
+    // Ability icons — hx() is global, safe to call here
+    const aY=GH-60;
+    ['Slash','Dash','Parry','Hellfire'].forEach((nm,i)=>{
+      const ax=GW/2-110+i*56;const cols=[P.CLOAK,0x224488,0x226644,P.LAVA];
+      const g=scene.add.graphics().setScrollFactor(0).setDepth(20);
+      g.fillStyle(0x0A0808,0.88);g.fillRoundedRect(ax-2,aY-2,44,44,4);
+      g.lineStyle(1,cols[i],0.7);g.strokeRoundedRect(ax-2,aY-2,44,44,4);
+      scene.add.text(ax+19,aY+32,nm,{fontFamily:'Share Tech Mono',fontSize:'9px',color:'#665544'}).setDepth(22).setScrollFactor(0).setOrigin(0.5,0);
+      scene.add.text(ax+2,aY+2,['LMB','LShift','RMB','MWB'][i],{fontFamily:'Share Tech Mono',fontSize:'9px',color:hx(cols[i])}).setDepth(22).setScrollFactor(0);
+    });
+    // Minimap
+    this.mmBg=scene.add.graphics().setScrollFactor(0).setDepth(20);
+    this.mmBg.fillStyle(0x0A0808,0.85);this.mmBg.fillRect(GW-128,GH-88,118,68);
+    this.mmBg.lineStyle(1,0x332222,0.6);this.mmBg.strokeRect(GW-128,GH-88,118,68);
+    this.mmDot=scene.add.graphics().setScrollFactor(0).setDepth(21);
+    // Damage numbers pool
+    this.dmg=[];
+    for(let i=0;i<20;i++){
+      const t=scene.add.text(0,0,'',{fontFamily:'Cinzel',fontSize:'18px',color:hx(P.GOLD),stroke:'#000',strokeThickness:3}).setDepth(25).setScrollFactor(1).setAlpha(0);
+      this.dmg.push({t,act:false,vx:0,vy:0,lf:0});
+    }
+    // Boss HP bar
+    this.bBG=scene.add.graphics().setScrollFactor(0).setDepth(20).setAlpha(0);
+    this.bFill=scene.add.graphics().setScrollFactor(0).setDepth(21).setAlpha(0);
+    this.bTitle=scene.add.text(GW/2,GH-120,'',{fontFamily:'Cinzel',fontSize:'18px',color:'#CC3322',stroke:'#000',strokeThickness:3}).setOrigin(0.5,0).setScrollFactor(0).setDepth(22).setAlpha(0);
+    this.bPhase=scene.add.text(GW/2,GH-100,'',{fontFamily:'Cinzel',fontSize:'12px',color:'#884433'}).setOrigin(0.5,0).setScrollFactor(0).setDepth(22).setAlpha(0);
+    this.showBoss=false;this.bossRef=null;
+    // Status popup
+    this.statT=scene.add.text(GW/2,GH/2-80,'',{fontFamily:'Cinzel',fontSize:'26px',color:hx(P.GOLD),stroke:'#000',strokeThickness:4}).setOrigin(0.5).setScrollFactor(0).setDepth(28).setAlpha(0);
+  }
+  showDmg(wx,wy,amt,crit){
+    for(const d of this.dmg){if(d.act)continue;
+      d.t.setPosition(wx,wy).setText(crit?`${amt}!`:String(amt))
+        .setColor(crit?'#FFFF00':hx(P.GOLD)).setAlpha(1).setFontSize(crit?22:18);
+      d.vx=rn(-28,28);d.vy=-115;d.lf=880;d.act=true;return;}
+  }
+  revealBoss(boss){
+    this.showBoss=true;this.bossRef=boss;
+    this.bBG.setAlpha(1);this.bFill.setAlpha(1);
+    this.bTitle.setText('IGNIVAR — THE FALLEN KING').setAlpha(1);
+    this.bPhase.setAlpha(1);
+  }
+  update(delta){
+    const p=this.pl,dt=delta*0.001;
+    // HP bar
+    this.hBar.clear();
+    this.hBar.fillStyle(0x220808,1);this.hBar.fillRect(122,26,170,14);
+    this.hBar.fillStyle(P.HP,1);this.hBar.fillRect(122,26,170*(p.hp/p.mhp),14);
+    this.hVal.setText(`${Math.ceil(p.hp)}/${p.mhp}`);
+    // MP bar
+    this.mBar.clear();
+    this.mBar.fillStyle(0x080820,1);this.mBar.fillRect(122,54,170,14);
+    this.mBar.fillStyle(0x2244CC,1);this.mBar.fillRect(122,54,170*(p.mp/p.mmp),14);
+    this.mVal.setText(`${Math.floor(p.mp)}/${p.mmp}`);
+    // XP bar
+    this.xBar.clear();
+    this.xBar.fillStyle(0x082208,1);this.xBar.fillRect(122,74,170,8);
+    this.xBar.fillStyle(P.GREEN,1);this.xBar.fillRect(122,74,170*(p.xp/p.xpN),8);
+    this.lvT.setText(`Lv.${p.lv}`);
+    this.gldT.setText(String(p.gold));this.embT.setText(String(p.ember));
+    // Minimap dot
+    this.mmDot.clear();
+    const mx=GW-128,my=GH-88,mw=118,mh=68;
+    this.mmDot.fillStyle(P.CLOAK2||P.CLOAK,1);
+    this.mmDot.fillCircle(mx+(p.spr.x/WORLD_W)*mw, my+(p.spr.y/WORLD_H)*mh, 3);
+    // Boss bar
+    if(this.showBoss&&this.bossRef&&this.bossRef.alive){
+      const br=this.bossRef.hp/this.bossRef.maxhp;const ph=this.bossRef.phase;
+      this.bBG.clear();this.bBG.fillStyle(0x110808,0.92);this.bBG.fillRect(GW/2-200,GH-88,400,18);
+      this.bBG.lineStyle(1,P.CLOAK,0.6);this.bBG.strokeRect(GW/2-200,GH-88,400,18);
+      this.bFill.clear();const bc=ph===1?P.CLOAK:ph===2?P.LAVA:P.EMBER;
+      this.bFill.fillStyle(bc,1);this.bFill.fillRect(GW/2-200,GH-88,400*br,18);
+      this.bPhase.setText(`Phase ${ph}  ·  ${Math.floor(br*100)}% HP`);
+    }
+    // Damage numbers
+    for(const d of this.dmg){
+      if(!d.act)continue;
+      d.lf-=delta;d.t.setY(d.t.y+d.vy*dt);d.t.setX(d.t.x+d.vx*dt);d.vy+=190*dt;
+      d.t.setAlpha(d.lf/880);if(d.lf<=0){d.act=false;d.t.setAlpha(0);}
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: BOOT
+// ══════════════════════════════════════════════════════════
+class BootScene extends Phaser.Scene{
+  constructor(){super({key:'Boot'});}
+  create(){genAll(this);if(window._hfLoaderDone)window._hfLoaderDone();this.scene.start('Menu');}
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: MAIN MENU
+// ══════════════════════════════════════════════════════════
+class MenuScene extends Phaser.Scene{
+  constructor(){super({key:'Menu'});}
+  create(){
+    SFX.unlock();
+    this.t=0;this.sel=0;
+    this.parts=[];
+    for(let i=0;i<90;i++)this.parts.push({x:rn(0,GW),y:rn(0,GH),vx:rn(-14,14),vy:rn(-45,-10),sz:rn(1,4),col:Math.random()>0.5?P.EMBER:P.LAVA,al:rn(0.2,0.9),lf:rn(2000,6000),ml:6000});
+    this.ptcG=this.add.graphics().setDepth(2);
+    this._drawBG();
+    // Title
+    this.add.text(GW/2,110,'HELLFIRE',{fontFamily:'Cinzel',fontStyle:'bold',fontSize:'92px',color:'#CC2200',stroke:'#550000',strokeThickness:6,shadow:{offsetX:0,offsetY:0,color:'#FF4400',blur:28,fill:true}}).setOrigin(0.5).setDepth(5);
+    this.add.text(GW/2,200,'THE  LAST  EMBER',{fontFamily:'Cinzel',fontSize:'28px',color:'#886633',stroke:'#000',strokeThickness:3}).setOrigin(0.5).setDepth(5);
+    this.add.text(GW/2,240,'"A Cursed World.  A Dying Flame.  A Destiny Written in Ash."',{fontFamily:'Crimson Text',fontStyle:'italic',fontSize:'16px',color:'#664422'}).setOrigin(0.5).setDepth(5);
+    // Story panel
+    const sG=this.add.graphics().setDepth(4);
+    sG.fillStyle(0x080408,0.82);sG.fillRoundedRect(GW/2+30,282,390,194,6);
+    sG.lineStyle(1,0x332222,0.5);sG.strokeRoundedRect(GW/2+30,282,390,194,6);
+    this.add.text(GW/2+42,298,'— STORY —',{fontFamily:'Cinzel',fontSize:'13px',color:'#886633'}).setDepth(5);
+    this.add.text(GW/2+42,320,
+      'In a world consumed by ash,\nthe eternal flame is fading.\n\nYou are the last ember of the\nHellfire Dynasty. To rekindle\nthe core you must descend into\nAshen Keep and confront\nthe gods who turned their backs.',
+      {fontFamily:'Crimson Text',fontSize:'14px',color:'#AA9977',lineSpacing:4}).setDepth(5);
+    // Menu items
+    const hasSave=!!localStorage.getItem('hf_save');
+    const items=[['▶  NEW GAME','new'],['◆  CONTINUE','cnt'],['◈  OPTIONS','opt'],['⬛  EXIT','exit']];
+    this.mTxts=[];
+    items.forEach(([lbl,k],i)=>{
+      const dim=k==='cnt'&&!hasSave;
+      const t=this.add.text(178,304+i*50,lbl,{fontFamily:'Cinzel',fontSize:'20px',color:dim?'#332211':'#CCAA77',stroke:'#000',strokeThickness:2}).setOrigin(0,0.5).setDepth(5).setInteractive();
+      if(!dim){t.on('pointerover',()=>{this.sel=i;SFX.talk();});t.on('pointerdown',()=>this._sel(k));}
+      this.mTxts.push({t,k,dim});
+    });
+    this.add.text(14,GH-18,'© 2025 PARTH  ·  v1.0.0',{fontFamily:'Share Tech Mono',fontSize:'11px',color:'#332211'}).setDepth(5);
+    // Keys
+    this.kUp=this.input.keyboard.addKey('UP');
+    this.kDn=this.input.keyboard.addKey('DOWN');
+    this.kEnt=this.input.keyboard.addKey('ENTER');
+    this.pU=false;this.pD2=false;this.pE=false;
+    this.input.on('pointerdown',()=>SFX.unlock());
+  }
+  _drawBG(){
+    const b=this.add.graphics().setDepth(0);
+    b.fillGradientStyle(0x050210,0x050210,0x0A0508,0x0A0508,1);b.fillRect(0,0,GW,GH);
+    b.fillStyle(0x220808,1);b.fillCircle(GW*0.78,110,62);
+    b.fillStyle(0x330C0C,0.7);b.fillCircle(GW*0.78,110,50);
+    b.fillStyle(0x442010,0.55);b.fillCircle(GW*0.78,110,38);
+    b.fillStyle(0x0A0508,1);
+    const rs=[{x:0,w:110,h:270},{x:180,w:75,h:190},{x:580,w:170,h:330},{x:960,w:95,h:250},{x:1350,w:140,h:300},{x:1900,w:85,h:210},{x:2400,w:190,h:380},{x:3100,w:120,h:290},{x:3900,w:150,h:320},{x:4600,w:105,h:240}];
+    rs.forEach(r=>{b.fillRect(r.x,GH-r.h-55,r.w,r.h+80);for(let i=0;i<Math.floor(r.w/22);i++)b.fillRect(r.x+i*22,GH-r.h-75,14,22);});
+    for(let i=0;i<8;i++){b.fillStyle(P.LAVA,0.05-i*0.005);b.fillRect(0,GH-i*20-55,GW,24);}
+    b.fillStyle(0x0C0808,1);b.fillRect(0,GH-55,GW,55);
+    // hero silhouette
+    b.fillStyle(0x0A0508,1);
+    b.fillRect(GW/2-76,GH-252,58,175);b.fillRect(GW/2-58,GH-292,48,195);
+    b.fillRect(GW/2-48,GH-332,38,42);b.fillRect(GW/2-20,GH-412,8,128);
+    b.fillRect(GW/2-30,GH-354,26,8);
+    b.fillStyle(P.EMBER,0.11);b.fillCircle(GW/2-38,GH-242,68);
+    b.fillStyle(P.LAVA,0.07);b.fillCircle(GW/2-38,GH-242,98);
+  }
+  _sel(k){
+    SFX.talk();
+    if(k==='new'){localStorage.removeItem('hf_save');this.cameras.main.flash(380,10,0,0);this.time.delayedCall(380,()=>this.scene.start('Intro'));}
+    else if(k==='cnt'){this.cameras.main.flash(380,10,0,0);this.time.delayedCall(380,()=>this.scene.start('Game'));}
+    else if(k==='exit'){window.close();}
+  }
+  update(tm,delta){
+    this.t+=delta*0.001;
+    this.ptcG.clear();
+    for(const p of this.parts){
+      p.x+=p.vx*delta*0.001;p.y+=p.vy*delta*0.001;p.lf-=delta;
+      if(p.y<-10||p.lf<=0){p.x=rn(0,GW);p.y=GH+5;p.lf=rn(2000,6000);p.ml=p.lf;p.al=rn(0.3,0.9);}
+      this.ptcG.fillStyle(p.col,p.al*(p.lf/p.ml));this.ptcG.fillCircle(p.x,p.y,p.sz);
+    }
+    this.mTxts.forEach(({t,k,dim},i)=>{if(!dim)t.setColor(i===this.sel?hx(P.GOLD):'#CCAA77');});
+    const jU=this.kUp.isDown&&!this.pU,jD=this.kDn.isDown&&!this.pD2,jE=this.kEnt.isDown&&!this.pE;
+    if(jU)this.sel=Math.max(0,this.sel-1);
+    if(jD)this.sel=Math.min(this.mTxts.length-1,this.sel+1);
+    if(jE)this._sel(this.mTxts[this.sel].k);
+    this.pU=this.kUp.isDown;this.pD2=this.kDn.isDown;this.pE=this.kEnt.isDown;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: INTRO CUTSCENE
+// ══════════════════════════════════════════════════════════
+class IntroScene extends Phaser.Scene{
+  constructor(){super({key:'Intro'});}
+  create(){
+    const b=this.add.graphics();b.fillStyle(0,1);b.fillRect(0,0,GW,GH);
+    const lines=[
+      {t:'In a world consumed by ash and betrayal...',d:0},
+      {t:'The eternal flame that once protected all living things...',d:2800},
+      {t:'...is fading.',d:5600},
+      {t:'Monsters awaken. Kingdoms fall. Gods turn their backs.',d:8800},
+      {t:'You are the last child of the Hellfire Dynasty.',d:12800},
+      {t:'You carry the final ember of the Hellfire Core.',d:16400},
+      {t:'This is not a quest for glory.',d:20200},
+      {t:'This is grief. Sacrifice. Destiny.',d:23000},
+      {t:'This is HELLFIRE.',d:26500},
+    ];
+    lines.forEach(({t,d},i)=>{
+      // Calculate how long this line is visible: time until next line appears (or end)
+      const nextD = i < lines.length-1 ? lines[i+1].d : 29500;
+      const holdMs = Math.max(400, nextD - d - 1100 - 700); // subtract fadeIn + fadeOut durations
+      this.time.delayedCall(d,()=>{
+        const style=t==='This is HELLFIRE.'?
+          {fontFamily:'Cinzel',fontStyle:'bold',fontSize:'38px',color:'#CC2200',stroke:'#000',strokeThickness:4}:
+          {fontFamily:'Crimson Text',fontStyle:'italic',fontSize:'22px',color:'#AA8855',stroke:'#000',strokeThickness:2};
+        const tx=this.add.text(GW/2,GH/2-20,t,style).setOrigin(0.5).setAlpha(0);
+        // Fade in, hold, then fade out — so lines never overlap
+        this.tweens.add({targets:tx,alpha:1,duration:1100,ease:'Linear',onComplete:()=>{
+          this.time.delayedCall(holdMs,()=>{
+            this.tweens.add({targets:tx,alpha:0,duration:700,ease:'Linear',onComplete:()=>tx.destroy()});
+          });
+        }});
+      });
+    });
+    this.time.delayedCall(29500,()=>this.scene.start('Game'));
+    const skip=()=>this.scene.start('Game');
+    this.input.once('pointerdown',skip);
+    this.input.keyboard.once('keydown-ENTER',skip);
+    this.input.keyboard.once('keydown-SPACE',skip);
+    this.add.text(GW-14,GH-18,'Press ENTER or tap to skip',{fontFamily:'Share Tech Mono',fontSize:'11px',color:'#332211'}).setOrigin(1,1);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: GAME — Ashen Keep
+// ══════════════════════════════════════════════════════════
+class GameScene extends Phaser.Scene{
+  constructor(){super({key:'Game'});}
+
+  create(){
+    SFX.unlock();
+    // Show mobile controls now that the game has started
+    if(IS_MOBILE){ const mu=document.getElementById('mobile-ui'); if(mu) mu.classList.add('active'); }
+    this.physics.world.setBounds(0,0,WORLD_W,WORLD_H);
+
+    const sv=JSON.parse(localStorage.getItem('hf_save')||'{}');
+    this._buildBG();
+    this._buildLevel();
+
+    // Player — fix #2: world gravity in physics config handles falling
+    const sx=sv.x||200,sy=sv.y||640;
+    this.player=new Player(this,sx,sy);
+    if(sv.lv)Object.assign(this.player,{lv:sv.lv,xp:sv.xp||0,xpN:sv.xpN||100,hp:sv.hp||150,mhp:sv.mhp||150,mp:sv.mp||60,mmp:sv.mmp||60,gold:sv.gold||0,ember:sv.ember||0,str:sv.str||10,vit:sv.vit||10,dex:sv.dex||10,intel:sv.intel||10,lck:sv.lck||10});
+    this.physics.add.collider(this.player.spr,this.platforms);
+    this.physics.add.overlap(this.player.spr,this.hazards,()=>{if(this.player.invT<=0)this.player.takeDmg(18);});
+
+    this.enemies=[];
+    this._spawnEnemies();
+
+    this.boss=null;this.bossUp=false;this.bossSpawned=false;
+    this.npcs=[];this._spawnNPCs();
+    this.checks=[];this._spawnCheckpoints();
+    this.collects=[];this._spawnCollects();
+    this.swaves=[];this.swG=null;
+
+    this.ptc=new Particles(this,9);
+    this.hud=new HUD(this,this.player);
+    this.dlg=new Dlg(this);
+    this.pauseOn=false;
+
+    // Camera
+    this.cameras.main.setBounds(0,0,WORLD_W,WORLD_H);
+    this.cameras.main.startFollow(this.player.spr,true,0.09,0.09);
+
+    // fix #3: ALL keys created once in create(), never in update()
+    this.cursors=this.input.keyboard.createCursorKeys();
+    this.wasd=this.input.keyboard.addKeys({up:'W',left:'A',right:'D',down:'S'});
+    // itx and pause remain on keyboard; combat now uses mouse buttons + Left Shift
+    this.cbt=this.input.keyboard.addKeys({itx:'F',pause:'ESC'});
+    this.shiftKey=this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+    this.spaceKey=this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    // Mouse button state — tracked via pointer events (desktop only; mobile uses mobileKeys)
+    // btn 0 = left (Slash), btn 1 = middle/scroll wheel click (Hellfire), btn 2 = right (Parry)
+    this.mouseBtn={atk:false, par:false, hf:false};
+    this.input.on('pointerdown', (ptr)=>{
+      SFX.unlock();
+      if(ptr.button===0){ this.mouseBtn.atk=true; if(this.dlg.vis)this.dlg.advance(); }
+      if(ptr.button===1){ this.mouseBtn.hf =true; }
+      if(ptr.button===2){ this.mouseBtn.par=true; }
+    });
+    this.input.on('pointerup', (ptr)=>{
+      if(ptr.button===0) this.mouseBtn.atk=false;
+      if(ptr.button===1) this.mouseBtn.hf =false;
+      if(ptr.button===2) this.mouseBtn.par=false;
+    });
+    this.input.keyboard.on('keydown-SPACE',()=>{if(this.dlg.vis)this.dlg.advance();});
+    this.input.keyboard.on('keydown-F',()=>this._interact());
+    this.input.keyboard.on('keydown-ESC',()=>this._togglePause());
+
+    this._setupEvents();
+    this.emberT=0;
+
+    // Boss door
+    this._buildBossDoor();
+
+    // Area reveal text
+    const aT=this.add.text(GW/2,GH/2-90,'ASHEN KEEP',{fontFamily:'Cinzel',fontSize:'48px',color:'#AA6622',stroke:'#000',strokeThickness:5}).setOrigin(0.5).setScrollFactor(0).setDepth(25).setAlpha(0);
+    this.tweens.add({targets:aT,alpha:1,duration:900,hold:2200,yoyo:true,ease:'Linear'});
+
+    // Pause overlay
+    this.pauseGfx=this.add.graphics().setScrollFactor(0).setDepth(40).setAlpha(0);
+    this.pauseGfx.fillStyle(0x080408,0.9);this.pauseGfx.fillRect(0,0,GW,GH);
+    this.pauseT1=this.add.text(GW/2,GH/2-50,'PAUSED',{fontFamily:'Cinzel',fontStyle:'bold',fontSize:'52px',color:'#CC8833',stroke:'#000',strokeThickness:4}).setOrigin(0.5).setScrollFactor(0).setDepth(41).setAlpha(0);
+    this.pauseT2=this.add.text(GW/2,GH/2+20,'Press ESC to resume',{fontFamily:'Crimson Text',fontSize:'20px',color:'#775533'}).setOrigin(0.5).setScrollFactor(0).setDepth(41).setAlpha(0);
+    this.pauseStats=this.add.text(GW/2,GH/2+60,'',{fontFamily:'Share Tech Mono',fontSize:'13px',color:'#665533'}).setOrigin(0.5).setScrollFactor(0).setDepth(41).setAlpha(0);
+  }
+
+  _buildBG(){
+    // Layer 0 — gradient sky
+    const b=this.add.graphics().setDepth(0).setScrollFactor(0);
+    b.fillGradientStyle(0x050210,0x050210,0x0A0508,0x0A0508,1);b.fillRect(0,0,GW,GH);
+    // Blood moon (slow parallax)
+    const moon=this.add.graphics().setDepth(1).setScrollFactor(0.02);
+    moon.fillStyle(0x220808,1);moon.fillCircle(GW*0.8,90,58);
+    moon.fillStyle(0x330C0C,0.7);moon.fillCircle(GW*0.8,90,46);
+    // Distant ruin silhouettes
+    const far=this.add.graphics().setDepth(2).setScrollFactor(0.06);
+    far.fillStyle(0x080408,1);
+    for(let i=0;i<18;i++){const tw=rn(30,85),th=rn(60,210),tx=i*340+rn(-30,30),ty=WORLD_H-th-50;far.fillRect(tx,ty,tw,th+80);for(let b2=0;b2<Math.floor(tw/20);b2++)far.fillRect(tx+b2*20,ty-18,14,20);}
+    // Mid-ground pillars
+    const mid=this.add.graphics().setDepth(3).setScrollFactor(0.16);
+    mid.fillStyle(0x0E0608,1);
+    for(let i=0;i<22;i++){const px2=i*280+rn(-40,40),pw=rn(10,24),ph=rn(90,280);mid.fillRect(px2,WORLD_H-ph-28,pw,ph+60);}
+    // Ground lava glow
+    const gw=this.add.graphics().setDepth(1).setScrollFactor(0);
+    for(let i=0;i<8;i++){gw.fillStyle(P.LAVA,0.05-i*0.005);gw.fillRect(0,GH-i*22-55,GW,25);}
+  }
+
+  // fix #5: use staticGroup.create() for proper static physics bodies
+  _buildLevel(){
+    this.platforms=this.physics.add.staticGroup();
+    this.hazards=this.physics.add.staticGroup();
+
+    // Platforms: [left-x, top-y, width, height]
+    const PLATS=[
+      [0,720,1080,100],[1250,720,620,100],[1950,720,900,100],
+      [2950,720,620,100],[3670,720,440,100],[4220,720,1150,100],[5180,720,420,100],
+      // Raised platforms
+      [860,582,160,20],[680,494,140,20],[540,402,120,20],
+      [1560,582,180,20],[1380,474,140,20],[2180,562,200,20],
+      [2480,444,160,20],[2980,592,200,20],[3180,584,120,20],
+      [3560,484,140,20],[3760,384,120,20],[4020,484,100,20],
+      [4280,562,180,20],[4580,434,140,20],[4980,582,200,20],
+    ];
+    const HZDS=[[1080,792,170,30],[1750,792,200,30],[3570,792,100,30]];
+
+    PLATS.forEach(([lx,ty,w,h])=>{
+      // Draw visual tiles
+      for(let ix=0;ix<w;ix+=TILE){
+        const tw2=Math.min(TILE,w-ix),th2=Math.min(TILE,h);
+        this.add.image(lx+ix+tw2/2, ty+th2/2,'tile').setDepth(5).setDisplaySize(tw2,th2);
+      }
+      // Static physics body — create() places sprite at CENTER
+      const body=this.platforms.create(lx+w/2,ty+h/2,'px');
+      body.setDisplaySize(w,h);body.refreshBody();body.setAlpha(0);
+    });
+
+    HZDS.forEach(([lx,ty,w,h])=>{
+      for(let ix=0;ix<w;ix+=TILE){this.add.image(lx+ix+20,ty+10,'tile_lava').setDepth(5).setDisplaySize(40,20);}
+      const hb=this.hazards.create(lx+w/2,ty+h/2,'px');hb.setDisplaySize(w,h);hb.refreshBody();hb.setAlpha(0);
+    });
+  }
+
+  _spawnEnemies(){
+    const defs=[
+      [580,680,'ash_sol'],[800,680,'ash_sol'],[1360,680,'ash_sol'],[1580,680,'ash_sol'],
+      [2050,680,'ash_sol'],[2280,680,'wraith'],[2650,680,'wraith'],
+      [3020,680,'ash_sol'],[3480,680,'ash_sol'],[3680,680,'wraith'],
+      [4020,680,'ash_sol'],[4200,680,'wraith'],[4480,680,'wraith'],[4680,680,'ash_sol'],[4900,680,'ash_sol'],
+    ];
+    defs.forEach(([ex,ey,tp])=>{
+      const e=new Enemy(this,ex,ey,tp);
+      this.physics.add.collider(e.spr,this.platforms);
+      this.enemies.push(e);
+    });
+  }
+
+  _spawnNPCs(){
+    // Elder Aric near start
+    const a1X=210,a1Y=690;
+    const n1=this.add.image(a1X,a1Y-32,'npc').setDepth(6).setScale(1.1);
+    const i1=this.add.text(a1X,a1Y-90,'[F] Talk',{fontFamily:'Share Tech Mono',fontSize:'12px',color:'#886644'}).setOrigin(0.5).setDepth(7);
+    this.npcs.push({x:a1X,y:a1Y,r:82,img:n1,ind:i1,idx:0,dlgs:[
+      {s:'Elder Aric',t:'The flame... it fades with each passing night. I have lived long enough to know what that means. The Hellfire Core is dying.'},
+      {s:'Elder Aric',t:'You carry it within you — that last ember. The Fallen King guards the path ahead. He was... one of us, once.'},
+      {s:'Elder Aric',t:'Go, child. Descend. Rekindle what was lost. The world remembers those who refuse to give up.'},
+    ]});
+    // Kael near boss door
+    const a2X=5050,a2Y=690;
+    const n2=this.add.image(a2X,a2Y-32,'npc').setDepth(6).setFlipX(true).setTint(0xAA8866).setScale(1.0);
+    const i2=this.add.text(a2X,a2Y-90,'[F] Talk',{fontFamily:'Share Tech Mono',fontSize:'12px',color:'#886644'}).setOrigin(0.5).setDepth(7);
+    this.npcs.push({x:a2X,y:a2Y,r:90,img:n2,ind:i2,idx:0,dlgs:[
+      {s:'Kael',t:'You have made it this far. Beyond that door is Ignivar — The Fallen King. He was consumed by the very flame he swore to protect.'},
+      {s:'Kael',t:'We all carry our own hellfire. The difference is... some choose to let it burn the world. Others... choose to protect it.'},
+      {s:'Kael',t:'Whatever happens in there — remember why you came. The Last Ember. That is all that matters now.'},
+    ]});
+  }
+
+  _spawnCheckpoints(){
+    [[2820,720],[4860,720]].forEach(([cx,cy])=>{
+      const img=this.add.image(cx,cy-20,'bonfire').setDepth(6).setScale(1.2);
+      const zone=this.physics.add.image(cx,cy-20,'px').setDisplaySize(80,80).setAlpha(0);
+      zone.body.allowGravity=false;zone.setImmovable(true);
+      this.physics.add.overlap(this.player.spr,zone,()=>this._activateCK(cx,cy,zone));
+      this.checks.push({img,zone,done:false,x:cx,y:cy});
+    });
+  }
+  _activateCK(cx,cy,zone){
+    const ck=this.checks.find(c=>c.zone===zone);if(!ck||ck.done)return;
+    ck.done=true;SFX.ckpt();
+    this.player.hp=this.player.mhp;this.player.mp=this.player.mmp;
+    this._save(cx+20,cy-80);
+    this.events.emit('ck-rest');
+    this.ptc.burst(cx,cy-20,22,{col:P.EMBER,smn:40,smx:130,szn:2,szx:6,lmn:600,lmx:1300});
+  }
+
+  _spawnCollects(){
+    const items=[[480,555,'ember'],[1100,388,'ember'],[2380,404,'ember'],[3800,344,'ember'],[4590,395,'ember'],
+                 [700,464,'coin'],[1500,445,'coin'],[2190,525,'coin'],[3190,555,'coin'],[4290,525,'coin'],[4980,545,'coin']];
+    items.forEach(([ix,iy,tp])=>{
+      const img=this.add.image(ix,iy,tp).setDepth(6).setScale(tp==='ember'?1.2:1);
+      const zone=this.physics.add.image(ix,iy,'px').setDisplaySize(22,22).setAlpha(0);
+      zone.body.allowGravity=false;
+      this.physics.add.overlap(this.player.spr,zone,()=>this._collect(img,zone,tp));
+      this.collects.push({img,zone,tp,done:false});
+    });
+  }
+  _collect(img,zone,tp){
+    if(!img.active)return;img.destroy();zone.destroy();SFX.coin();
+    if(tp==='ember'){this.player.ember+=1;this.ptc.burst(img.x,img.y,12,{col:P.EMBER,smn:40,smx:120,szn:2,szx:5,lmn:250,lmx:550});}
+    else{this.player.gold+=ri(3,10);this.ptc.burst(img.x,img.y,8,{col:P.GOLD,smn:30,smx:100,szn:2,szx:5,lmn:200,lmx:450});}
+  }
+
+  _buildBossDoor(){
+    const dx=5170,dy=600;
+    this.add.image(dx+40,dy+60,'bossdoor').setDepth(6);
+    const gfx=this.add.graphics().setDepth(5);
+    gfx.fillStyle(P.LAVA,0.1);gfx.fillRect(dx,dy,80,140);
+    const dz=this.physics.add.image(dx+40,dy+60,'px').setDisplaySize(80,140).setAlpha(0);
+    dz.body.allowGravity=false;dz.setImmovable(true);
+    this.physics.add.collider(this.player.spr,dz,()=>this._enterBoss());
+    this.add.text(dx+40,dy-18,'THE FALLEN KING',{fontFamily:'Cinzel',fontSize:'12px',color:'#AA3322',stroke:'#000',strokeThickness:2}).setOrigin(0.5).setDepth(7);
+  }
+  _enterBoss(){
+    if(this.bossSpawned)return;this.bossSpawned=true;
+    this.cameras.main.shake(700,0.018);SFX.bRoar();
+    this.cameras.main.flash(400,10,0,0);
+    this.time.delayedCall(1000,()=>{
+      this.boss=new FallenKing(this,5380,622);
+      this.physics.add.collider(this.boss.spr,this.platforms);
+      this.hud.revealBoss(this.boss);
+      this.time.delayedCall(400,()=>this.dlg.show('Ignivar','You dare enter my throne... child of ash? The last ember... it will be extinguished HERE!','npc',null));
+    });
+  }
+
+  _interact(){
+    if(this.dlg.vis){this.dlg.advance();return;}
+    for(const n of this.npcs){
+      if(Math.hypot(this.player.spr.x-n.x,this.player.spr.y-n.y)<n.r){
+        const d=n.dlgs[n.idx%n.dlgs.length];n.idx++;
+        this.dlg.show(d.s,d.t,'npc');return;
+      }
+    }
+  }
+
+  _togglePause(){
+    this.pauseOn=!this.pauseOn;
+    const a=this.pauseOn?1:0;
+    this.tweens.add({targets:[this.pauseGfx,this.pauseT1,this.pauseT2,this.pauseStats],alpha:a,duration:180});
+    if(this.pauseOn){
+      const p=this.player;
+      this.pauseStats.setText(`Lv.${p.lv}  ·  HP ${Math.ceil(p.hp)}/${p.mhp}  ·  MP ${Math.floor(p.mp)}/${p.mmp}\nSTR:${p.str}  VIT:${p.vit}  DEX:${p.dex}  INT:${p.intel}  LCK:${p.lck}\nGold: ${p.gold}  Ember: ${p.ember}`);
+    }
+  }
+
+  _setupEvents(){
+    this.events.on('p-dead',()=>this.time.delayedCall(1150,()=>this.scene.start('GameOver')));
+    this.events.on('p-hurt',(x,y)=>this.ptc.burst(x,y,8,{col:P.HP,smn:30,smx:120,szn:2,szx:5,lmn:140,lmx:340}));
+    this.events.on('p-djump',(x,y)=>this.ptc.burst(x,y+30,10,{col:P.EMBER,smn:38,smx:115,szn:2,szx:5,dmn:Math.PI*0.8,dmx:Math.PI*1.2,lmn:180,lmx:400}));
+    this.events.on('p-dash',(x,y,d)=>this.ptc.emit(x,y,6,{col:P.CLOAK,smn:28,smx:75,szn:1,szx:3,lmn:90,lmx:280,dmn:Math.PI,dmx:Math.PI*2}));
+    this.events.on('p-hfire',(x,y)=>{this.ptc.burst(x,y,24,{col:P.LAVA,smn:80,smx:295,szn:3,szx:10,lmn:300,lmx:700});this.cameras.main.shake(280,0.011);this.ptc.burst(x,y,12,{col:P.EMBER,smn:55,smx:195,szn:2,szx:6,lmn:380,lmx:880});});
+    this.events.on('p-slash',(x,y,c)=>this.ptc.burst(x+(this.player.dir*30),y,6,{col:c===2?P.EMBER:P.SWORD2,smn:55,smx:175,szn:1.5,szx:4,lmn:90,lmx:240}));
+    this.events.on('p-parry',(x,y)=>this.ptc.burst(x,y,12,{col:P.SWORD2,smn:75,smx:215,szn:2,szx:6,lmn:190,lmx:490}));
+    this.events.on('p-counter',(x,y)=>{this.ptc.burst(x,y,20,{col:P.GOLD,smn:100,smx:340,szn:3,szx:9,lmn:290,lmx:690});this.cameras.main.shake(240,0.014);});
+    this.events.on('p-ember',(x,y)=>this.ptc.emit(x,y,1,{col:P.EMBER,smn:18,smx:55,szn:1,szx:3,lmn:90,lmx:240,dmn:Math.PI,dmx:Math.PI*2}));
+    this.events.on('hit-e',(x,y,d,c)=>{this.hud.showDmg(x,y-28,d,c);this.cameras.main.shake(75,0.005);this.ptc.burst(x,y,8,{col:P.HP,smn:38,smx:125,szn:2,szx:5,lmn:90,lmx:290});});
+    this.events.on('hit-b',(x,y,d,c)=>{this.hud.showDmg(x,y-50,d,c);this.cameras.main.shake(115,0.009);this.ptc.burst(x,y,14,{col:P.LAVA,smn:55,smx:195,szn:3,szx:8,lmn:140,lmx:440});});
+    this.events.on('hit-boss-vfx',(x,y,d)=>{});
+    this.events.on('e-dead',(x,y,tp,xp,gld)=>{this.player.gainXP(xp);this.player.gold+=gld;this.ptc.burst(x,y,20,{col:tp==='wraith'?P.PURPLE:P.BONE,smn:55,smx:215,szn:2,szx:8,lmn:240,lmx:580});this.cameras.main.shake(95,0.007);});
+    this.events.on('pu-drop',(x,y)=>{/* future power-up drop */});
+    this.events.on('lvup',(lv,x,y)=>{this.hud.statT.setText(`Level Up! → ${lv}`).setAlpha(1);this.tweens.add({targets:this.hud.statT,alpha:0,y:this.hud.statT.y-38,delay:1600,duration:750});});
+    this.events.on('e-atk',(ex,ey,tp,dir)=>{
+      if(Math.abs(ex-this.player.spr.x)<78&&Math.abs(ey-this.player.spr.y)<78)
+        this.player.takeDmg(tp==='ash_sol'?12:18);
+    });
+    this.events.on('boss-atk',(bx,by,tp,dir)=>{
+      if(tp==='slam'){if(Math.abs(this.player.spr.x-bx)<125&&Math.abs(this.player.spr.y-by)<98)this.player.takeDmg(34);this.ptc.burst(bx,by+60,16,{col:P.LAVA,smn:55,smx:195,szn:3,szx:8,dmn:Math.PI*0.5,dmx:Math.PI*1.5,lmn:190,lmx:490});}
+      else if(tp==='charge'){if(Math.abs(this.player.spr.x-bx)<88)this.player.takeDmg(26);}
+    });
+    this.events.on('boss-sw',(bx,by,ph)=>{
+      this.swaves.push({x:bx,y:by+80,r:0,max:340+ph*95,spd:275+ph*55,dmg:18+ph*7});
+      this.cameras.main.shake(385,0.014);
+      this.ptc.burst(bx,by+60,20,{col:P.LAVA,smn:75,smx:240,szn:3,szx:10,lmn:280,lmx:680});
+    });
+    this.events.on('boss-phase',(ph)=>{
+      const m=['','','Ignivar ENRAGED — Phase 2!','Ignivar UNLEASHED — Phase 3!'];
+      this.hud.statT.setText(m[ph]||'').setAlpha(1);
+      this.tweens.add({targets:this.hud.statT,alpha:0,delay:2400,duration:780});
+      this.cameras.main.shake(780,0.024);
+      if(this.boss)this.ptc.burst(this.boss.spr.x,this.boss.spr.y,30,{col:ph===3?P.EMBER:P.LAVA,smn:95,smx:390,szn:4,szx:14,lmn:380,lmx:980});
+    });
+    this.events.on('boss-dlg',txt=>this.dlg.show('Ignivar',txt,'npc',null));
+    this.events.on('boss-dead',(x,y)=>{
+      for(let i=0;i<8;i++)this.time.delayedCall(i*190,()=>this.ptc.burst(x+rn(-80,80),y+rn(-55,55),26,{col:i%2===0?P.LAVA:P.EMBER,smn:75,smx:340,szn:4,szx:14,lmn:480,lmx:1150}));
+      this.cameras.main.shake(1100,0.034);this.cameras.main.flash(580,10,4,0);
+      this.player.gainXP(300);this.player.gold+=150;this.player.ember+=10;
+      this.time.delayedCall(1800,()=>{
+        this.dlg.show('Ignivar','...The flame... it chooses the one who refuses to give up. Not the strongest. Not the bravest. Just... the one who endures.','npc',()=>{
+          this._save(x,y-100);
+          this.time.delayedCall(700,()=>this.scene.start('Victory',{pl:{lv:this.player.lv,gold:this.player.gold,ember:this.player.ember,t:Math.floor(this.time.now/1000)}}));
+        });
+      });
+    });
+    this.events.on('ck-rest',()=>{this.hud.statT.setText('Bonfire lit.\nHP & MP fully restored').setAlpha(1);this.tweens.add({targets:this.hud.statT,alpha:0,delay:2400,duration:780});});
+  }
+
+  _save(x,y){
+    const p=this.player;
+    localStorage.setItem('hf_save',JSON.stringify({x,y,lv:p.lv,xp:p.xp,xpN:p.xpN,hp:p.hp,mhp:p.mhp,mp:p.mp,mmp:p.mmp,gold:p.gold,ember:p.ember,str:p.str,vit:p.vit,dex:p.dex,intel:p.intel,lck:p.lck}));
+  }
+
+  update(tm,delta){
+    if(this.pauseOn)return;
+    // fix #3: use pre-created spaceKey, never addKey() in update
+    const c=this.cursors,w=this.wasd,k=this.cbt;
+    const keys={
+      left: c.left.isDown||w.left.isDown||mobileKeys.left,
+      right:c.right.isDown||w.right.isDown||mobileKeys.right,
+      jump: c.up.isDown||w.up.isDown||this.spaceKey.isDown||mobileKeys.jump,
+      down: c.down.isDown||w.down.isDown||mobileKeys.down,
+      atk:  this.mouseBtn.atk||mobileKeys.atk,
+      dash: this.shiftKey.isDown||mobileKeys.dash,
+      par:  this.mouseBtn.par||mobileKeys.par,
+      hf:   this.mouseBtn.hf||mobileKeys.hf,
+    };
+    const dt=delta*0.001;
+
+    if(this.player.st!=='dead')this.player.update(dt,delta,keys,this.platforms,this.enemies,this.boss);
+
+    const px=this.player.spr.x,py=this.player.spr.y;
+    this.enemies.forEach(e=>e.update(delta,px,py));
+    if(this.boss)this.boss.update(delta,px,py);
+
+    // Shockwaves
+    if(!this.swG)this.swG=this.add.graphics().setDepth(6);
+    else this.swG.clear();
+    this.swaves=this.swaves.filter(sw=>{
+      sw.r+=sw.spd*dt;
+      const pd=Math.hypot(px-sw.x,py-sw.y);
+      if(Math.abs(pd-sw.r)<34)this.player.takeDmg(sw.dmg);
+      if(sw.r<sw.max){const a=1-sw.r/sw.max;this.swG.lineStyle(4,P.LAVA,a*0.68);this.swG.strokeCircle(sw.x,sw.y,sw.r);return true;}
+      return false;
+    });
+
+    // Collectibles hover
+    this.collects.forEach(({img},i)=>{if(img&&img.active)img.y+=Math.sin(tm*0.003+i)*0.38;});
+    // NPC indicators
+    this.npcs.forEach(n=>{
+      const d=Math.hypot(px-n.x,py-n.y);
+      n.ind.setVisible(d<120&&!this.dlg.vis);
+      n.img.y+=Math.sin(tm*0.002)*0.18;
+    });
+    // Bonfire pulse
+    this.checks.forEach(cp=>cp.img.setScale(1.2+Math.sin(tm*0.006)*0.08));
+    // Ambient embers
+    this.emberT-=delta;
+    if(this.emberT<=0){this.emberT=145;this.ptc.emit(px+rn(-190,190),WORLD_H-15,1,{col:Math.random()>0.5?P.EMBER:P.LAVA,smn:14,smx:48,szn:0.8,szx:3,lmn:1800,lmx:4000,dmn:-Math.PI*0.82,dmx:-Math.PI*0.18,gr:18});}
+
+    this.dlg.update(delta);
+    this.hud.update(delta);
+    this.ptc.update(delta);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: GAME OVER
+// ══════════════════════════════════════════════════════════
+class GameOverScene extends Phaser.Scene{
+  constructor(){super({key:'GameOver'});}
+  create(){
+    const b=this.add.graphics();b.fillStyle(0,1);b.fillRect(0,0,GW,GH);
+    this.time.delayedCall(280,()=>{b.fillStyle(P.VOID||0x1A0000,0.55);b.fillRect(0,0,GW,GH);});
+    // Skull
+    const s=this.add.graphics().setAlpha(0);
+    s.fillStyle(0xCCCCBB,1);s.fillCircle(GW/2,258,48);
+    s.fillStyle(0xDDDDCC,1);s.fillRect(GW/2-38,292,76,38);
+    s.fillStyle(0x330000,1);s.fillEllipse(GW/2-14,250,20,18);s.fillEllipse(GW/2+14,250,20,18);
+    s.fillStyle(P.RED,0.9);s.fillEllipse(GW/2-14,250,10,9);s.fillEllipse(GW/2+14,250,10,9);
+    for(let i=0;i<5;i++)s.fillRect(GW/2-20+i*10,293,8,16);
+    this.tweens.add({targets:s,alpha:1,duration:1100,ease:'Power2'});
+    const died=this.add.text(GW/2,368,'THE EMBER FADES',{fontFamily:'Cinzel',fontStyle:'bold',fontSize:'42px',color:'#AA2211',stroke:'#000',strokeThickness:5}).setOrigin(0.5).setAlpha(0);
+    this.tweens.add({targets:died,alpha:1,delay:680,duration:880});
+    this.add.text(GW/2,428,'"The world forgets those who surrender..."',{fontFamily:'Crimson Text',fontStyle:'italic',fontSize:'17px',color:'#664422'}).setOrigin(0.5);
+    this._btn(GW/2-96,516,'Try Again',()=>{this.cameras.main.flash(280,10,0,0);this.time.delayedCall(280,()=>this.scene.start('Game'));});
+    this._btn(GW/2+96,516,'Main Menu',()=>this.scene.start('Menu'));
+    this.add.text(GW/2,GH-18,'HELLFIRE: THE LAST EMBER  ·  © 2025 PARTH  ·  v1.0.0',{fontFamily:'Share Tech Mono',fontSize:'11px',color:'#331100'}).setOrigin(0.5);
+  }
+  _btn(x,y,lbl,cb){
+    const g=this.add.graphics();
+    g.fillStyle(0x110808,0.9);g.fillRoundedRect(x-86,y-22,172,44,6);
+    g.lineStyle(1,P.CLOAK,0.7);g.strokeRoundedRect(x-86,y-22,172,44,6);
+    const t=this.add.text(x,y,lbl,{fontFamily:'Cinzel',fontSize:'18px',color:'#CC8833',stroke:'#000',strokeThickness:2}).setOrigin(0.5).setInteractive();
+    t.on('pointerover',()=>t.setColor(hx(P.GOLD)));t.on('pointerout',()=>t.setColor('#CC8833'));t.on('pointerdown',cb);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCENE: VICTORY
+// ══════════════════════════════════════════════════════════
+class VictoryScene extends Phaser.Scene{
+  constructor(){super({key:'Victory'});}
+  init(d){this.gd=d||{};}
+  create(){
+    const pd=this.gd.pl||{};
+    const b=this.add.graphics();
+    b.fillGradientStyle(0x050210,0x050210,0x100508,0x100508,1);b.fillRect(0,0,GW,GH);
+    for(let i=6;i>=1;i--){b.fillStyle(P.EMBER,0.025*i);b.fillCircle(GW/2,GH/2,80+i*40);}
+    // Particles
+    const pg=this.add.graphics().setDepth(2);
+    const pts=[];for(let i=0;i<130;i++)pts.push({x:rn(0,GW),y:rn(GH,GH+200),vx:rn(-18,18),vy:rn(-58,-18),sz:rn(1,5),col:Math.random()>0.5?P.EMBER:P.LAVA,al:rn(0.3,1),lf:rn(2000,5000),ml:5000});
+    // Title
+    const tit=this.add.text(GW/2,118,'THE EMBER ENDURES',{fontFamily:'Cinzel',fontStyle:'bold',fontSize:'52px',color:hx(P.GOLD),stroke:'#000',strokeThickness:5,shadow:{offsetX:0,offsetY:0,color:hx(P.EMBER),blur:28,fill:true}}).setOrigin(0.5).setAlpha(0);
+    this.tweens.add({targets:tit,alpha:1,duration:1400,ease:'Power2'});
+    const sub=this.add.text(GW/2,192,'The Fallen King is defeated. The eternal flame breathes once more.',{fontFamily:'Crimson Text',fontStyle:'italic',fontSize:'19px',color:'#AA9977',wordWrap:{width:GW-200},align:'center'}).setOrigin(0.5).setAlpha(0);
+    this.tweens.add({targets:sub,alpha:1,delay:1700,duration:1100});
+    // Stats
+    const sBg=this.add.graphics().setAlpha(0);
+    sBg.fillStyle(0x080408,0.85);sBg.fillRoundedRect(GW/2-215,268,430,195,8);
+    sBg.lineStyle(1,P.CLOAK,0.5);sBg.strokeRoundedRect(GW/2-215,268,430,195,8);
+    this.tweens.add({targets:sBg,alpha:1,delay:2900,duration:750});
+    const mn=Math.floor((pd.t||0)/60),sc=((pd.t||0)%60);
+    const sT=this.add.text(GW/2,316,[
+      '— JOURNEY COMPLETE —',
+      `Level Reached:   ${pd.lv||1}`,
+      `Gold Collected:  ${pd.gold||0}`,
+      `Ember Shards:    ${pd.ember||0}`,
+      `Time:            ${mn}m ${sc}s`,
+    ].join('\n'),{fontFamily:'Share Tech Mono',fontSize:'15px',color:'#AABB99',lineSpacing:8,align:'center'}).setOrigin(0.5,0).setAlpha(0);
+    this.tweens.add({targets:sT,alpha:1,delay:3100,duration:750});
+    // Quote
+    const q=this.add.text(GW/2,505,'"The flame chooses not the strongest... but the one who refuses to give up."',{fontFamily:'Crimson Text',fontStyle:'italic',fontSize:'17px',color:'#665533',wordWrap:{width:GW-180},align:'center'}).setOrigin(0.5).setAlpha(0);
+    this.tweens.add({targets:q,alpha:1,delay:3900,duration:1100});
+    // Credits
+    this.add.text(GW/2,GH-38,'HELLFIRE: THE LAST EMBER  —  Developed by Parth  —  © 2025 DMCE AI-DS Engineering  —  v1.0.0',{fontFamily:'Share Tech Mono',fontSize:'11px',color:'#443322'}).setOrigin(0.5);
+    // Play again
+    this.time.delayedCall(5200,()=>{
+      const btn=this.add.text(GW/2,GH-82,'[ Return to Main Menu ]',{fontFamily:'Cinzel',fontSize:'18px',color:'#886633',stroke:'#000',strokeThickness:2}).setOrigin(0.5).setAlpha(0).setInteractive();
+      this.tweens.add({targets:btn,alpha:1,duration:550});
+      btn.on('pointerover',()=>btn.setColor(hx(P.GOLD)));btn.on('pointerout',()=>btn.setColor('#886633'));
+      btn.on('pointerdown',()=>this.scene.start('Menu'));
+      this.input.keyboard.on('keydown-ENTER',()=>this.scene.start('Menu'));
+    });
+    // Particle loop
+    this.pTmr=this.time.addEvent({delay:16,loop:true,callback:()=>{
+      pg.clear();
+      for(const p of pts){
+        p.x+=p.vx*0.016;p.y+=p.vy*0.016;p.lf-=16;p.al=p.lf/p.ml;
+        if(p.y<-20||p.lf<=0){p.x=rn(0,GW);p.y=GH+10;p.lf=rn(2000,5000);p.ml=p.lf;p.al=rn(0.3,1);}
+        pg.fillStyle(p.col,p.al);pg.fillCircle(p.x,p.y,p.sz);
+      }
+    }});
+  }
+  shutdown(){if(this.pTmr)this.pTmr.remove();}
+}
+
+// ══════════════════════════════════════════════════════════
+// MOBILE JOYSTICK CONTROLLER
+// ══════════════════════════════════════════════════════════
+(function initMobileControls(){
+  if(!IS_MOBILE) return;
+
+  // UI is kept hidden until GameScene starts (see GameScene.create)
+  // Hide keyboard hint on mobile immediately (it's never useful on touch)
+  const hint = document.getElementById('hint');
+  if(hint) hint.style.display = 'none';
+
+  // ── Joystick ──
+  const joyZone  = document.getElementById('joy-zone');
+  const joyKnob  = document.getElementById('joy-knob');
+  const JOY_R    = 65;   // max knob travel radius (px)
+  const DEAD     = 0.25; // dead-zone fraction
+  let joyActive  = false;
+  let joyOriginX = 0, joyOriginY = 0;
+  let joyTouchId = null;
+
+  function joyStart(ex, ey){
+    const rect = joyZone.getBoundingClientRect();
+    joyOriginX = rect.left + rect.width  / 2;
+    joyOriginY = rect.top  + rect.height / 2;
+    joyActive  = true;
+    joyMove(ex, ey);
+  }
+  function joyMove(ex, ey){
+    if(!joyActive) return;
+    let dx = ex - joyOriginX;
+    let dy = ey - joyOriginY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const clamp = Math.min(dist, JOY_R);
+    const angle = Math.atan2(dy, dx);
+    const kx = Math.cos(angle)*clamp;
+    const ky = Math.sin(angle)*clamp;
+    joyKnob.style.left = (65 - 27 + kx) + 'px';  // center at base center minus half-knob
+    joyKnob.style.top  = (65 - 27 + ky) + 'px';
+    const nx = dx / JOY_R;   // normalized -1..1
+    const ny = dy / JOY_R;
+    mobileKeys.left  = nx < -DEAD;
+    mobileKeys.right = nx >  DEAD;
+    mobileKeys.down  = ny >  DEAD;
+  }
+  function joyEnd(){
+    joyActive = false;
+    joyTouchId = null;
+    joyKnob.style.left = '38px';
+    joyKnob.style.top  = '38px';
+    mobileKeys.left  = false;
+    mobileKeys.right = false;
+    mobileKeys.down  = false;
+  }
+
+  joyZone.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    const t = e.changedTouches[0];
+    joyTouchId = t.identifier;
+    joyStart(t.clientX, t.clientY);
+  }, {passive:false});
+  joyZone.addEventListener('touchmove', e=>{
+    e.preventDefault();
+    for(const t of e.changedTouches){
+      if(t.identifier === joyTouchId){ joyMove(t.clientX, t.clientY); break; }
+    }
+  }, {passive:false});
+  joyZone.addEventListener('touchend',   e=>{ e.preventDefault(); joyEnd(); }, {passive:false});
+  joyZone.addEventListener('touchcancel',e=>{ e.preventDefault(); joyEnd(); }, {passive:false});
+
+  // ── Action buttons ──
+  function bindBtn(id, key){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('touchstart', e=>{ e.preventDefault(); mobileKeys[key]=true;  el.classList.add('pressed');    }, {passive:false});
+    el.addEventListener('touchend',   e=>{ e.preventDefault(); mobileKeys[key]=false; el.classList.remove('pressed'); }, {passive:false});
+    el.addEventListener('touchcancel',e=>{ e.preventDefault(); mobileKeys[key]=false; el.classList.remove('pressed'); }, {passive:false});
+  }
+  bindBtn('btn-jump','jump');
+  bindBtn('btn-atk', 'atk');
+  bindBtn('btn-dash','dash');
+  bindBtn('btn-par', 'par');
+  bindBtn('btn-hf',  'hf');
+
+  // Interact button — fires a synthetic keydown F so the existing listener triggers
+  const btnItx = document.getElementById('btn-itx');
+  if(btnItx){
+    btnItx.addEventListener('touchstart', e=>{
+      e.preventDefault();
+      mobileKeys.interact = true;
+      document.dispatchEvent(new KeyboardEvent('keydown',{key:'f',code:'KeyF',keyCode:70,bubbles:true}));
+    }, {passive:false});
+    btnItx.addEventListener('touchend', e=>{ e.preventDefault(); mobileKeys.interact=false; }, {passive:false});
+  }
+
+  // Pause button — fires synthetic ESC
+  const btnPause = document.getElementById('btn-pause');
+  if(btnPause){
+    btnPause.addEventListener('touchstart', e=>{
+      e.preventDefault();
+      document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',keyCode:27,bubbles:true}));
+    }, {passive:false});
+  }
+
+  // Also unlock audio on first touch anywhere
+  document.addEventListener('touchstart', ()=>SFX.unlock(), {once:true});
+})();
+
+// ══════════════════════════════════════════════════════════
+// PHASER GAME CONFIG
+// ══════════════════════════════════════════════════════════
+new Phaser.Game({
+  type:Phaser.AUTO,
+  width:GW,height:GH,
+  backgroundColor:'#050210',
+  parent:'game',
+  // fix #2: world gravity = GRAV so player falls without any extra body settings
+  physics:{default:'arcade',arcade:{gravity:{y:GRAV},debug:false}},
+  scene:[BootScene,MenuScene,IntroScene,GameScene,GameOverScene,VictoryScene],
+  scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},
+  render:{antialias:false,pixelArt:true,powerPreference:'high-performance'},
+  disableContextMenu:true,
+});
+/*
+  HELLFIRE: THE LAST EMBER  ©2025 PARTH
+  A cursed world. A dying flame. A destiny written in ash.
+*/
+
+// ══════════════════════════════════════════════════════════
+// LOADING SCREEN CONTROLLER
+// ══════════════════════════════════════════════════════════
+(function initLoader(){
+  const loader  = document.getElementById('hf-loader');
+  const bar     = document.getElementById('hf-loader-bar');
+  const tip     = document.getElementById('hf-loader-tip');
+  if(!loader) return;
+
+  const tips = [
+    'Kindling the eternal flame…',
+    'Forging the blade in hellfire…',
+    'Awakening the Ash Soldiers…',
+    'Painting the crimson sky…',
+    'Loading the Ashen Keep…',
+  ];
+  let tipIdx = 0;
+  // Animate the progress bar in steps to simulate loading
+  let pct = 0;
+  const iv = setInterval(()=>{
+    pct += Math.random() * 14 + 4;
+    if(pct > 88) pct = 88; // hold at 88% until Phaser signals done
+    bar.style.width = pct + '%';
+    tipIdx = Math.floor(pct / 22) % tips.length;
+    tip.textContent = tips[tipIdx];
+  }, 220);
+
+  // Called by BootScene once genAll() finishes — fills bar to 100% then fades out
+  window._hfLoaderDone = function(){
+    clearInterval(iv);
+    bar.style.width = '100%';
+    tip.textContent = 'The ember awakens…';
+    setTimeout(()=>{
+      loader.classList.add('fade-out');
+      setTimeout(()=>{ loader.style.display='none'; }, 750);
+    }, 400);
+  };
+})();
+
+// ══════════════════════════════════════════════════════════
+// COOKIE CONSENT CONTROLLER
+// ══════════════════════════════════════════════════════════
+(function initCookieConsent(){
+  const COOKIE_KEY = 'hf_cookie_consent';
+  const banner = document.getElementById('hf-cookie');
+  if(!banner) return;
+
+  // Already decided — don't show again
+  if(localStorage.getItem(COOKIE_KEY)) return;
+
+  // Show banner after a short delay (after loader starts fading)
+  setTimeout(()=>{ banner.classList.remove('hidden'); }, 1800);
+
+  document.getElementById('hf-ck-accept').addEventListener('click', ()=>{
+    localStorage.setItem(COOKIE_KEY, 'accepted');
+    banner.classList.add('hidden');
+  });
+  document.getElementById('hf-ck-reject').addEventListener('click', ()=>{
+    localStorage.setItem(COOKIE_KEY, 'rejected');
+    banner.classList.add('hidden');
+  });
+})()
+</script>
+</body>
+</html>
