@@ -6,7 +6,7 @@ A browser-based 2D action-adventure RPG built as a single HTML game using JavaSc
 
 **Live Game:** https://hell-fire.netlify.app/
 
-**Architecture Website:** https://koparth-exe.github.io/HELLFIRE/
+**Architecture Website:** https://hell-fire-architecture.netlify.app/
 
 The architecture website provides an interactive visual representation of the game's actual client-side runtime architecture and signal flow.
 
